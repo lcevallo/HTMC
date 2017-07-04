@@ -1,0 +1,115 @@
+package Entities;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+
+/**
+ * The persistent class for the consolidado_item_stock_real database table.
+ * 
+ */
+@Entity
+@Table(name="consolidado_item_stock_real")
+@NamedQuery(name="ConsolidadoItemStockReal.findAll", query="SELECT c FROM ConsolidadoItemStockReal c")
+public class ConsolidadoItemStockReal implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@EmbeddedId
+	private ConsolidadoItemStockRealPK id;
+
+	@Column(name="ajuste_egreso")
+	private Integer ajusteEgreso;
+
+	@Column(name="ajuste_ingresos")
+	private Integer ajusteIngresos;
+
+	private String descripcion;
+
+	private Integer egresos;
+
+	private Integer ingresos;
+
+	@Column(name="otros_egresos")
+	private Integer otrosEgresos;
+
+	@Column(name="stock_real")
+	private Integer stockReal;
+
+	private Integer transferencia;
+
+	public ConsolidadoItemStockReal() {
+	}
+
+	public ConsolidadoItemStockRealPK getId() {
+		return this.id;
+	}
+
+	public void setId(ConsolidadoItemStockRealPK id) {
+		this.id = id;
+	}
+
+	public Integer getAjusteEgreso() {
+		return this.ajusteEgreso;
+	}
+
+	public void setAjusteEgreso(Integer ajusteEgreso) {
+		this.ajusteEgreso = ajusteEgreso;
+	}
+
+	public Integer getAjusteIngresos() {
+		return this.ajusteIngresos;
+	}
+
+	public void setAjusteIngresos(Integer ajusteIngresos) {
+		this.ajusteIngresos = ajusteIngresos;
+	}
+
+	public String getDescripcion() {
+		return this.descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public Integer getEgresos() {
+		return this.egresos;
+	}
+
+	public void setEgresos(Integer egresos) {
+		this.egresos = egresos;
+	}
+
+	public Integer getIngresos() {
+		return this.ingresos;
+	}
+
+	public void setIngresos(Integer ingresos) {
+		this.ingresos = ingresos;
+	}
+
+	public Integer getOtrosEgresos() {
+		return this.otrosEgresos;
+	}
+
+	public void setOtrosEgresos(Integer otrosEgresos) {
+		this.otrosEgresos = otrosEgresos;
+	}
+
+	public Integer getStockReal() {
+		return this.stockReal;
+	}
+
+	public void setStockReal(Integer stockReal) {
+		this.stockReal = stockReal;
+	}
+
+	public Integer getTransferencia() {
+		return this.transferencia;
+	}
+
+	public void setTransferencia(Integer transferencia) {
+		this.transferencia = transferencia;
+	}
+
+}

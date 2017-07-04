@@ -1,0 +1,139 @@
+package Entities;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.sql.Timestamp;
+
+
+/**
+ * The persistent class for the egreso_items_copy database table.
+ * 
+ */
+@Entity
+@Table(name="egreso_items_copy")
+@NamedQuery(name="EgresoItemsCopy.findAll", query="SELECT e FROM EgresoItemsCopy e")
+public class EgresoItemsCopy implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Integer id;
+
+	private Integer anio;
+
+	private Integer bodega;
+
+	private Integer cantidad;
+
+	private Integer dia;
+
+	@Column(name="dia_texto")
+	private String diaTexto;
+
+	private Timestamp fecha;
+
+	@Column(name="hora_texto")
+	private String horaTexto;
+
+	private Integer mes;
+
+	@Column(name="orden_medica")
+	private String ordenMedica;
+
+	//bi-directional many-to-one association to Item
+	@ManyToOne
+	@JoinColumn(name="itemfk")
+	private Item item;
+
+	public EgresoItemsCopy() {
+	}
+
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getAnio() {
+		return this.anio;
+	}
+
+	public void setAnio(Integer anio) {
+		this.anio = anio;
+	}
+
+	public Integer getBodega() {
+		return this.bodega;
+	}
+
+	public void setBodega(Integer bodega) {
+		this.bodega = bodega;
+	}
+
+	public Integer getCantidad() {
+		return this.cantidad;
+	}
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public Integer getDia() {
+		return this.dia;
+	}
+
+	public void setDia(Integer dia) {
+		this.dia = dia;
+	}
+
+	public String getDiaTexto() {
+		return this.diaTexto;
+	}
+
+	public void setDiaTexto(String diaTexto) {
+		this.diaTexto = diaTexto;
+	}
+
+	public Timestamp getFecha() {
+		return this.fecha;
+	}
+
+	public void setFecha(Timestamp fecha) {
+		this.fecha = fecha;
+	}
+
+	public String getHoraTexto() {
+		return this.horaTexto;
+	}
+
+	public void setHoraTexto(String horaTexto) {
+		this.horaTexto = horaTexto;
+	}
+
+	public Integer getMes() {
+		return this.mes;
+	}
+
+	public void setMes(Integer mes) {
+		this.mes = mes;
+	}
+
+	public String getOrdenMedica() {
+		return this.ordenMedica;
+	}
+
+	public void setOrdenMedica(String ordenMedica) {
+		this.ordenMedica = ordenMedica;
+	}
+
+	public Item getItem() {
+		return this.item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+}

@@ -1,0 +1,391 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package ManagedBeans;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
+
+import net.sf.jasperreports.engine.JRException;
+
+import org.primefaces.context.RequestContext;
+
+import Entities.ConsolidadoAnualPivote;
+import Entities.ConsolidadoStockRealPivote;
+import Entities.SPDetalleItem;
+import SessionBeans.ConsolidadoAnualPivoteFacadeLocal;
+import SessionBeans.ConsolidadoStockRealPivoteFacadeLocal;
+import Utility.MyUtil;
+import Utility.Reporte;
+
+/**
+ *
+ * @author lcevallos
+ */
+@ManagedBean
+@ViewScoped
+public class ItemDetalleBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * Creates a new instance of itemDetalleBean
+	 */
+	private Integer mes;
+	private Integer anio;
+	private String itemFk;
+	private String tipo;
+	private String descripcion;
+	private Reporte rpt;
+	private HashMap<String, Object> parametros;
+
+	@EJB
+	private ConsolidadoAnualPivoteFacadeLocal consolidadoAnualPivoteFacadeLocal;
+
+	@EJB
+	private ConsolidadoStockRealPivoteFacadeLocal consolidadoStockRealPivoteFacadeLocal;
+
+	private List<SPDetalleItem> listSpDetalleItem;
+	private List<Object[]> listaStockItem;
+	private SPDetalleItem seleccionado;
+
+	public ItemDetalleBean() {
+		this.rpt = new Reporte();
+		this.listSpDetalleItem = new ArrayList<>();
+	}
+	
+	
+	public Reporte getRpt() {
+		return rpt;
+	}
+
+
+
+
+	public void setRpt(Reporte rpt) {
+		this.rpt = rpt;
+	}
+
+
+
+
+	public HashMap<String, Object> getParametros() {
+		return parametros;
+	}
+
+
+
+
+	public void setParametros(HashMap<String, Object> parametros) {
+		this.parametros = parametros;
+	}
+
+
+
+
+	public List<SPDetalleItem> getListSpDetalleItem() {
+		return listSpDetalleItem;
+	}
+
+	public void setListSpDetalleItem(List<SPDetalleItem> listSpDetalleItem) {
+		this.listSpDetalleItem = listSpDetalleItem;
+	}
+
+	public SPDetalleItem getSeleccionado() {
+		return seleccionado;
+	}
+
+	public void setSeleccionado(SPDetalleItem seleccionado) {
+		this.seleccionado = seleccionado;
+	}
+
+	public Integer getMes() {
+		return mes;
+	}
+
+	public void setMes(Integer mes) {
+		this.mes = mes;
+	}
+
+	public Integer getAnio() {
+		return anio;
+	}
+
+	public void setAnio(Integer anio) {
+		this.anio = anio;
+	}
+
+	public String getItemFk() {
+		return itemFk;
+	}
+
+	public void setItemFk(String itemFk) {
+		this.itemFk = itemFk;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public List<Object[]> getListaStockItem() {
+		return listaStockItem;
+	}
+
+	public void setListaStockItem(List<Object[]> listaStockItem) {
+		this.listaStockItem = listaStockItem;
+	}
+
+	public void invocarDialogo(ConsolidadoAnualPivote record, Long mes,
+			String tipo) {
+
+		RequestContext context = RequestContext.getCurrentInstance();
+
+		this.anio = record.getId().getYear();
+		this.itemFk = record.getId().getItem();
+		this.mes = (int) (long) mes;
+		this.tipo = tipo;
+		this.descripcion = record.getDescripcion();
+        
+				
+		this.getDetalleItem();
+
+		RequestContext.getCurrentInstance().update("itemDialog");
+		RequestContext.getCurrentInstance().update("itemDetalleTbl");
+
+		context.execute("PF('itemDialogWidget').show();");
+		// FacesContext.getCurrentInstance().addMessage(null,new
+		// FacesMessage(FacesMessage.SEVERITY_INFO, "He llegaoooo",
+		// "He llegaoooo") );
+	}
+
+	public void invocarDialogoStock(ConsolidadoStockRealPivote record, Long mes) {
+		RequestContext context = RequestContext.getCurrentInstance();
+
+		this.anio = record.getId().getYear();
+		this.itemFk = record.getId().getItem();
+		this.mes = (int) (long) mes;
+		this.descripcion = record.getDescripcion();
+
+		this.getItemStockDetalle();
+
+		RequestContext.getCurrentInstance().update("formVisorInformacionStock");
+		// RequestContext.getCurrentInstance().update("formVisorInformacionStock");
+
+		context.execute("PF('itemStockDialogWidget').show();");
+
+	}
+
+	public void getDetalleItem() {
+
+		try {
+
+			this.listSpDetalleItem = this.consolidadoAnualPivoteFacadeLocal
+					.getDetalleItem(this.itemFk, this.anio, this.mes, this.tipo);
+
+		}
+
+		catch (PersistenceException he) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error 1", he
+							.getMessage()));
+
+		}
+
+		catch (SQLException sqle) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error 3",
+							sqle.getMessage()));
+
+		} catch (Exception e) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", e
+							.getMessage()));
+		}
+
+	}
+
+	public void getItemStockDetalle() {
+		try {
+
+			this.listaStockItem = this.consolidadoStockRealPivoteFacadeLocal
+					.getItemDetalleStock(this.anio, this.mes, this.itemFk);
+
+		} catch (PersistenceException he) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error 1", he
+							.getMessage()));
+
+		}
+
+		catch (Exception e) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", e
+							.getMessage()));
+		}
+
+	}
+
+	public int getValueCantidadTotal() {
+		Integer suma = 0;
+		for (SPDetalleItem di : this.listSpDetalleItem) {
+			suma += di.getCantidad();
+
+		}
+		return suma;
+	}
+	
+	
+	
+	
+	/** Para Reportes */
+	
+	public String getLogo()
+	{
+		
+		ServletContext servletContext = (ServletContext) FacesContext
+				.getCurrentInstance().getExternalContext().getContext();
+		String logo = servletContext.getRealPath("") + File.separator
+				+ "resources" + File.separator + "images" + File.separator
+				+ "LOGO_HTMC.png";
+		return logo;
+	}
+	
+	
+	public void exportarPDF() {
+
+		rpt = new Reporte();
+		parametros = new HashMap<String, Object>();
+		String path;
+		String nombre_archivo;
+		parametros.put("inYear", this.anio);
+		parametros.put("inItem", this.itemFk);
+		parametros.put("descripcion", this.descripcion);		
+		parametros.put("mes_texto", MyUtil.getMes(this.mes-1));
+		parametros.put("inMes", this.mes);
+		
+		
+		if(this.tipo.equals("I"))
+		{
+			path = "/reportes/ItemDetalleDialogIngreso.jasper";
+			nombre_archivo="item_ingreso_detalle";
+		}
+		
+		else
+		{
+			path = "/reportes/ItemDetalleDialogEgreso.jasper";
+			nombre_archivo="item_egreso_detalle";
+		}
+		
+		try {
+			rpt.exportarPDF(parametros, path, nombre_archivo);
+
+		} catch (JRException je) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+							.getMessage()));
+			je.printStackTrace();
+		} catch (IOException ie) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+							.getMessage()));
+			ie.printStackTrace();
+		} catch (NumberFormatException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+							"Debe de seleccionar un año"));
+		}
+
+	}// Fin del metodo exportarPDFEgreso
+
+	public void verPdf() {
+		rpt = new Reporte();
+		parametros = new HashMap<String, Object>();
+		String path;
+		String nombre_archivo;
+		
+		parametros.put("inYear", this.anio);
+		parametros.put("inItem", this.itemFk);
+		parametros.put("descripcion", this.descripcion);		
+		parametros.put("mes_texto", MyUtil.getMes(this.mes-1));
+		parametros.put("inMes", this.mes);
+		
+		
+		
+		if(this.tipo.equals("I"))
+		{
+			path = "/reportes/ItemDetalleDialogIngreso.jasper";
+			nombre_archivo="item_ingreso_detalle";
+		}
+		
+		else
+		{
+			path = "/reportes/ItemDetalleDialogEgreso.jasper";
+			nombre_archivo="item_egreso_detalle";
+		}
+		
+		
+		try {
+			rpt.verPDF(parametros, path,nombre_archivo);
+
+		} catch (JRException je) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+							.getMessage()));
+			je.printStackTrace();
+		} catch (IOException ie) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+							.getMessage()));
+			ie.printStackTrace();
+		} catch (NumberFormatException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+							"Debe de seleccionar un año"));
+		}
+
+	}//fin del metodo VerPdf
+	
+}

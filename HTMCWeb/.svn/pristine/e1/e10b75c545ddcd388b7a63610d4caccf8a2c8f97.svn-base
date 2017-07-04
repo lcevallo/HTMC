@@ -1,0 +1,197 @@
+<ui:composition template="/template.xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:define name="content">
+
+		<style>
+.ui-selectonemenu .ui-selectonemenu-label {
+	width: 90% !important;
+}
+
+.ui-selectonemenu {
+	width: 90% !important;
+}
+
+.ui-panel .ui-panel-content {
+	padding: 0em;
+}
+
+.rowContainer {
+	display: block;
+	width: 100%;
+	margin: 0px auto;
+	text-align: center;
+}
+
+.center {
+	margin: 0px auto;
+}
+
+.deleteUserButton {
+	width: auto !important;
+}
+
+table {
+	table-layout: fixed;
+}
+
+table td {
+	text-align: center;
+	word-wrap: break-word;
+}
+
+table input {
+	width: 90% !important;
+}
+
+.labelForm {
+	text-align: right;
+	width: 150px;
+	display: inline-block;
+}
+
+.valueForm {
+	margin-left: 4px;
+	display: inline-block;
+}
+
+.buttonForm {
+	width: 178px;
+}
+
+.verticalMiddle {
+	vertical-align: middle;
+}
+</style>
+		<script>
+			function focusForm() {
+				document.getElementById("form:panel").scrollIntoView();
+
+			}
+		</script>
+
+		<h:form id="form">
+
+			<p:growl id="growl" life="3000" showDetail="false" />
+
+
+
+			<p:panel id="panel" header="Administración de usuarios">
+
+				<p:outputPanel id="usuarioSelected" layout="block">
+
+					<br />
+					<label class="labelForm">Usuario:</label>
+					<p:inputText id="codUsuarioInput" label="Usuario"
+						styleClass="valueForm" value="#{usuarioBean.usuario.usuario}"
+						required="true" />
+					<br />
+					<label class="labelForm">Contraseña:</label>
+					<p:password id="passInput" label="Contraseña"
+						styleClass="valueForm" converter="#{usuarioBean}"
+						value="#{usuarioBean.usuario.clave}" required="true" />
+					<br />
+					<label class="labelForm">Nombre:</label>
+					<p:inputText id="nombreInput" label="Nombre" styleClass="valueForm"
+						value="#{usuarioBean.usuario.nombre}" required="true" />
+
+					<br />
+					<label class="labelForm">Apellido:</label>
+					<p:inputText id="apellidoInput" label="Apellido"
+						styleClass="valueForm" value="#{usuarioBean.usuario.apellido}"
+						required="true" />
+
+					<br />
+					<label class="labelForm">Estado:</label>
+					<p:inputSwitch id="estadoInput" label="Estado" onLabel="Activo"
+						offLabel="Inactivo" styleClass="valueForm verticalMiddle"
+						value="#{usuarioBean.usuario.estado}" />
+
+					<br />
+					<br />
+					<label class="labelForm"></label>
+					<p:commandButton id="addUser"
+						actionListener="#{usuarioBean.addUser}"
+						styleClass="valueForm buttonForm"
+						value="#{usuarioBean.editMode ? 'Editar usuario':'Añadir usuario'}"
+						update="form" process="usuarioSelected"
+						icon="#{usuarioBean.editMode ?'ui-icon-pencil':'ui-icon-circle-plus'} " />
+
+				</p:outputPanel>
+
+				<br />
+
+				<p:dataTable id="tablaUsuarios" var="record" scrollable="true"
+					value="#{usuarioBean.usuarios}" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{totalRecords} Usuarios"
+					rowsPerPageTemplate="5,10,15" widgetVar="tablaUsuarios"
+					filteredValue="#{usuarioBean.usuariosFiltered}" rows="10"
+					emptyMessage="No existen datos para presentar">
+
+
+					<p:column filterBy="#{record.codUsuario}"
+						sortBy="#{record.usuario}" style="width: 120px;"
+						filterMatchMode="contains" headerText="Usuario">
+
+						<h:outputText id="codUsuarioOutput" value="#{record.usuario}" />
+					</p:column>
+
+					<p:column style="width: 120px;" headerText="Contraseña"
+						rendered="false">
+
+						<h:outputText id="passOutput" value="#{record.clave}" />
+
+					</p:column>
+
+					<p:column filterBy="#{record.nombre}" sortBy="#{record.nombre}"
+						style="width: 120px;" filterMatchMode="contains"
+						headerText="Nombres">
+
+						<h:outputText id="nombreOutput" value="#{record.nombre}" />
+
+					</p:column>
+
+					<p:column filterBy="#{record.apellido}" sortBy="#{record.apellido}"
+						style="width: 120px;" filterMatchMode="contains"
+						headerText="Apellidos">
+
+						<h:outputText id="apellidoOutput" value="#{record.apellido}" />
+
+					</p:column>
+
+					<p:column style="width: 120px;" headerText="Estado">
+
+						<h:outputText id="estadoOutput" label="Estado"
+							value="#{record.estado ? 'Activo':'No activo'}" />
+
+					</p:column>
+
+
+					<p:column style="width:24px">
+
+						<p:commandButton id="editButton" update=":form:usuarioSelected"
+							onclick="focusForm()"
+							actionListener="#{usuarioBean.editRow(record)}" process="@this"
+							icon="ui-icon-pencil" title="Editar" />
+
+					</p:column>
+
+				</p:dataTable>
+
+
+			</p:panel>
+
+
+
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

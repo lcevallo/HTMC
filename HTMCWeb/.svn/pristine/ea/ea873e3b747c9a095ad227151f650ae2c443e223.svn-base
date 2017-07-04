@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2014-11-04T16:41:51 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_caducidad_x_detalle" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="5d1d5d30-df12-472e-aa00-b8c3bf7ab763">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Remoto"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#FBFDFF"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="dts_caducidad_x_detalle" uuid="45fe59bc-f4a6-4a73-98bb-f9c5ded80c3b">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Remoto"/>
+		<parameter name="inYear" class="java.lang.Integer">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<parameter name="inMes" class="java.lang.Integer"/>
+		<parameter name="inItem" class="java.lang.String"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT * FROM rpt_get_item_detalle_caducidad_x_color( $P{inYear} , $P{inMes}, $P{inItem}  )]]>
+		</queryString>
+		<field name="itemfk" class="java.lang.String"/>
+		<field name="descripcion" class="java.lang.String"/>
+		<field name="cantidad" class="java.lang.Integer"/>
+		<field name="bodega" class="java.lang.Integer"/>
+		<field name="lote" class="java.lang.String"/>
+		<field name="fecha" class="java.sql.Timestamp"/>
+		<field name="fecha_cad" class="java.sql.Date"/>
+		<field name="color" class="java.lang.String"/>
+		<field name="dias_cad" class="java.lang.Integer"/>
+	</subDataset>
+	<parameter name="nombre_usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="inItem" class="java.lang.String"/>
+	<parameter name="inYear" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="inMes" class="java.lang.Integer"/>
+	<parameter name="descripcion" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 1]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="555" height="79" uuid="62f9b5d7-d7d0-446c-bd97-c58bc018c34d"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="104" splitType="Stretch">
+			<staticText>
+				<reportElement x="104" y="57" width="211" height="20" forecolor="#1C4783" uuid="364bdf56-b4fb-42a8-96e8-e3c6dcb44b29"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial Black" size="14"/>
+				</textElement>
+				<text><![CDATA[AÑO:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="319" y="60" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="07afdeda-1120-4e44-b67d-107ab62381f1"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{inYear}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="104" y="80" width="211" height="20" forecolor="#1C4783" uuid="b9ee3fa3-4e93-4608-a96d-f71b8c4bfaa8"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial Black" size="14"/>
+				</textElement>
+				<text><![CDATA[MES:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="319" y="83" width="161" height="21" uuid="3762e546-7727-4418-9bbb-6f5f5906ed21"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{inMes}==1)? "ENERO":
+($P{inMes}==2)? "FEBRERO":
+($P{inMes}==3)? "MARZO":
+($P{inMes}==4)? "ABRIL":
+($P{inMes}==5)? "MAYO":
+($P{inMes}==6)? "JUNIO":
+($P{inMes}==7)? "JULIO":
+($P{inMes}==8)? "AGOSTO":
+($P{inMes}==9)? "SEPTIEMBRE":
+($P{inMes}==10)? "OCTUBRE":
+($P{inMes}==11)? "NOVIEMBRE":
+($P{inMes}==12)? "DICIEMBRE":"--"
+
+]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="527" y="20" width="150" height="50" uuid="ad1ac827-a321-4d50-b9fd-d1b3326b6b8c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="35" width="316" height="20" forecolor="#1C4783" uuid="6d981a69-f401-4584-bd33-d85377ef571f"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial Black" size="14"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE CADUCIDAD DEL ITEM:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="318" y="38" width="70" height="23" uuid="873bed87-02ff-48cb-b6ea-3e43c77476cf"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{inItem}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="6" y="0" width="175" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a31b4945-4944-4590-887d-ff45ca1c68e1"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_usuario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="360" y="0" width="182" height="20" uuid="dcd4d4a6-f84f-4182-930f-4c4a1a03ab58"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="0" width="80" height="20" uuid="9244f8f2-5943-4996-a515-b5dc0a9ce857"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="760" y="0" width="40" height="20" uuid="d00dbad3-80b3-479f-bf71-37f5dd6596df"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="213" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="802" height="213" uuid="6a253c85-7823-45df-b2c6-b48051479a9b"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dts_caducidad_x_detalle" uuid="5c8f1a36-c857-4920-947f-c373b42ce630">
+						<datasetParameter name="inYear">
+							<datasetParameterExpression><![CDATA[$P{inYear}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="inMes">
+							<datasetParameterExpression><![CDATA[$P{inMes}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="inItem">
+							<datasetParameterExpression><![CDATA[$P{inItem}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="200" uuid="34107977-bb38-48d3-bf2e-d54bf773cedf">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="200" height="30" uuid="fe6ceb42-59c2-49a4-a232-940106fbeaa8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Item]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField>
+								<reportElement x="0" y="0" width="200" height="40" uuid="712db46a-74c2-41d1-a3c2-64fc90430ae9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{itemfk}
++"\n"+
+$F{descripcion}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="66" uuid="14a4dee0-b3e2-42a9-8067-0a2c82b93f78">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="66" height="30" uuid="d1e42e2b-ba4c-447c-b8ee-216f7c36fc67"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Cantidad]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="66" height="40" uuid="addd2375-0811-4080-817e-3ec216a82b19"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="66" uuid="7278b91e-5af2-4a6b-a724-e42199cdc4a7">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="66" height="30" uuid="57cb7a11-d7a8-4951-b2a4-159e6d27f998"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Bodega]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField>
+								<reportElement x="0" y="0" width="66" height="40" uuid="86b60cb8-91c2-4c6e-b6e9-53040aff614d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{bodega}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="78" uuid="5dfaf69b-7106-40a3-bb7b-9dc703b0e02c">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="78" height="30" uuid="217a539f-ee34-407b-a637-2134bad30c2e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Lote]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField>
+								<reportElement x="0" y="0" width="78" height="40" uuid="05c851cc-1775-4f7d-bc35-7a71e2884919"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{lote}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="130" uuid="2c0dcdd0-0236-4013-b23e-bcb5a2f3149c">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="30" uuid="bd9ad26e-272b-441f-a6eb-39aa147df7d6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Fecha Ingreso]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField>
+								<reportElement x="0" y="0" width="130" height="40" uuid="a16ecafc-25e5-4ce2-bf80-5dd64c6548ac"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="130" uuid="820dede8-7a85-4875-97ff-e04e1146351b">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="30" uuid="0bfaf670-0537-49f8-8c30-056f72228a1d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Fecha Caducidad]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField>
+								<reportElement x="0" y="0" width="130" height="40" uuid="0ab74275-7426-4d0d-8aca-8bbbf35fe6dd"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{fecha_cad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="b8a7836f-f9f2-4721-8b21-366fe4ee1bb9">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="30" uuid="107dd13f-ce3d-45b4-959b-f26821be529f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Color]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="40" uuid="66c7f3b3-fbb7-4e45-99f7-3d6da580e0cc"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{color}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="70" uuid="9b2450c0-7422-420f-8880-2f9f7c9b748d">
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="30" uuid="16b65450-b848-461a-8512-84d1fb98f756"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Días por Caducar]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="2"/>
+						<jr:detailCell style="Table_TD" height="40">
+							<textField>
+								<reportElement x="0" y="0" width="70" height="40" uuid="90453737-1900-4a53-9306-06b90fd8c32c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{dias_cad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

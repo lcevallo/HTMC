@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" template="./template.xhtml">
+
+	<ui:define name="top">
+        top
+    </ui:define>
+
+	<ui:define name="left">
+        left
+    </ui:define>
+
+	<ui:define name="content">
+		<p:tabView scrollable="true" cache="false" id="tabView">
+			
+			<p:tab id="tab1" title="Consolidado Ingresos">
+				<ui:include src="consolidado_ingreso.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab2" title="Consolidado Egresos">
+				<ui:include src="consolidado_egreso.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab3" title="Percentiles">
+				<ui:include src="percentil.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab4" title="Stock Real (SF)">
+				<ui:include src="stock_sf.xhtml" />
+			</p:tab>
+			
+			<p:tab id="tab5" title="Stock"  rendered="false">
+				<ui:include src="stock.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab6" title="Duración">
+				<ui:include src="stock_minimo.xhtml" />
+			</p:tab>
+		   	
+			<p:tab id="tab7" title="Dashboard">
+				<ui:include src="dashboard.xhtml" />
+			</p:tab>
+			
+			<p:tab id="tab8" title="Caducidad">
+				<ui:include src="caducidad.xhtml" />
+			</p:tab>
+			
+			<p:tab id="tab9" title="Alerta Minimos x Bodega">
+				<ui:include src="alerta_minimo_x_bodega.xhtml" />
+			</p:tab>
+			
+			
+		</p:tabView>
+	</ui:define>
+
+	<!--
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+-->
+</ui:composition>

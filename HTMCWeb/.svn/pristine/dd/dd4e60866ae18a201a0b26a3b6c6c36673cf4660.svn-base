@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+
+	<style>
+.fechaTexto {
+	clear: both;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left;
+}
+</style>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dialog header="Opciones para Impresion" modal="true"
+			showEffect="fade" hideEffect="fade" widgetVar="impresionDialogWidget"
+			width="40%" position="top" appendToBody="false" draggable="false"
+			resizable="true" id="impresionDialogWidget">
+
+			<h:form>
+				<p:panel header="Seleccione el Color para la impresion">
+					<h:panelGrid columns="6" style="margin-bottom:5px" cellpadding="2">
+						<h:outputText value="Color: " />
+						<p:selectOneRadio id="colorImpresionCaducidad"
+							value="#{opcionesCaducidadBean.color}">
+							<f:selectItem itemLabel="Estables" itemValue="V" />
+							<f:selectItem itemLabel="Por Vencer" itemValue="A" />
+							<f:selectItem itemLabel="Caducados" itemValue="R" />
+
+						</p:selectOneRadio>
+
+
+						<p:commandButton id="dynaButtonTipoCaducidad" value="Imprimir"
+							type="button" icon="ui-icon-print" />
+						<p:menu overlay="true" trigger="dynaButtonTipoCaducidad"
+							my="left top" at="left bottom">
+							<p:submenu label="Reporte en:">
+								<p:menuitem value="PDF" icon="ui-icon-image"
+									actionListener="#{opcionesCaducidadBean.exportarPDF}"
+									ajax="false" />
+								<p:menuitem icon="ui-icon-image">
+									<h:commandLink id="openPopUpTipoCaducidad" value="VISOR PDF"
+										target="blankPopUpTipoCaducidad"
+										onclick="window.open('','blankPopUpTipoCaducidad','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+										actionListener="#{opcionesCaducidadBean.verPdf}" ajax="false" />
+								</p:menuitem>
+								<p:menuitem value="EXCEL" icon="ui-icon-xls" 
+								actionListener="#{opcionesCaducidadBean.exportarExcel}" ajax="false" 								
+								/>
+							</p:submenu>
+						</p:menu>
+
+					</h:panelGrid>
+				</p:panel>
+
+			</h:form>
+
+
+
+		</p:dialog>
+
+	</ui:composition>
+
+</h:body>
+</html>
+

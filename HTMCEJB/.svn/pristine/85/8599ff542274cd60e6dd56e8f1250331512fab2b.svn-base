@@ -1,0 +1,74 @@
+package Entities;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.sql.Timestamp;
+
+
+/**
+ * The persistent class for the vista_ingreso_maximo_minimo database table.
+ * 
+ */
+@Entity
+@Table(name="vista_ingreso_maximo_minimo")
+@NamedQuery(name="VistaIngresoMaximoMinimo.findAll", query="SELECT v FROM VistaIngresoMaximoMinimo v")
+public class VistaIngresoMaximoMinimo implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name="codigo_item")
+	private String codigoItem;
+
+	private String descripcion;
+
+	@Column(name="fecha_inicial")
+	private Timestamp fechaInicial;
+
+	private Integer maximo;
+
+	private Integer minimo;
+
+	public VistaIngresoMaximoMinimo() {
+	}
+
+	public String getCodigoItem() {
+		return this.codigoItem;
+	}
+
+	public void setCodigoItem(String codigoItem) {
+		this.codigoItem = codigoItem;
+	}
+
+	public String getDescripcion() {
+		return this.descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public Timestamp getFechaInicial() {
+		return this.fechaInicial;
+	}
+
+	public void setFechaInicial(Timestamp fechaInicial) {
+		this.fechaInicial = fechaInicial;
+	}
+
+	public Integer getMaximo() {
+		return this.maximo;
+	}
+
+	public void setMaximo(Integer maximo) {
+		this.maximo = maximo;
+	}
+
+	public Integer getMinimo() {
+		return this.minimo;
+	}
+
+	public void setMinimo(Integer minimo) {
+		this.minimo = minimo;
+	}
+
+}

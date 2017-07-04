@@ -1,0 +1,291 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package ManagedBeans;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.persistence.PersistenceException;
+
+import net.sf.jasperreports.engine.JRException;
+
+import org.primefaces.context.RequestContext;
+
+import Entities.ConsolidadoItemStockReal;
+import Entities.ConsolidadoStockRealPivote;
+import SessionBeans.ConsolidadoItemStockRealFacadeLocal;
+import SessionBeans.ConsolidadoStockRealPivoteFacadeLocal;
+import Utility.Reporte;
+
+/**
+ *
+ * @author lcevallos
+ */
+@ManagedBean
+@ViewScoped
+public class StockItemBean implements Serializable {
+
+	/**
+	 * Creates a new instance of StockItemBean
+	 */
+	private Integer anio;
+	private Integer mes;
+	private Reporte rpt;
+	private HashMap<String, Object> parametros;
+
+	private static final long serialVersionUID = 1L;
+
+	private List<ConsolidadoItemStockReal> listaConsolidadoItemStockReals;
+	private List<ConsolidadoItemStockReal> listaFiltradaConsolidadoItemStockReals;
+
+	private List<ConsolidadoStockRealPivote> listaConsolidadoStockRealPivote;
+	private List<ConsolidadoStockRealPivote> listaFiltradaConsolidadoStockRealPivote;
+
+	@EJB
+	private ConsolidadoItemStockRealFacadeLocal consolidadoItemStockRealFacadeLocal;
+
+	@EJB
+	private ConsolidadoStockRealPivoteFacadeLocal consolidadoStockRealPivoteFacadeLocal;
+
+	
+	
+	public Reporte getRpt() {
+		return rpt;
+	}
+
+	public void setRpt(Reporte rpt) {
+		this.rpt = rpt;
+	}
+
+	public HashMap<String, Object> getParametros() {
+		return parametros;
+	}
+
+	public void setParametros(HashMap<String, Object> parametros) {
+		this.parametros = parametros;
+	}
+
+	private ArrayList<String> selectedColumnsStocks = new ArrayList<>();
+	private ArrayList<String> columnsStocks = new ArrayList<>();
+
+	public StockItemBean() {
+
+	}
+
+	@PostConstruct
+	public void init() {
+		fillColumns();
+
+	}
+
+	public Integer getAnio() {
+		return anio;
+	}
+
+	public void setAnio(Integer anio) {
+		this.anio = anio;
+	}
+
+	public Integer getMes() {
+		return mes;
+	}
+
+	public void setMes(Integer mes) {
+		this.mes = mes;
+	}
+
+	public List<ConsolidadoItemStockReal> getListaConsolidadoItemStockReals() {
+		return listaConsolidadoItemStockReals;
+	}
+
+	public void setListaConsolidadoItemStockReals(
+			List<ConsolidadoItemStockReal> listaConsolidadoItemStockReals) {
+		this.listaConsolidadoItemStockReals = listaConsolidadoItemStockReals;
+	}
+
+	public List<ConsolidadoItemStockReal> getListaFiltradaConsolidadoItemStockReals() {
+		return listaFiltradaConsolidadoItemStockReals;
+	}
+
+	public void setListaFiltradaConsolidadoItemStockReals(
+			List<ConsolidadoItemStockReal> listaFiltradaConsolidadoItemStockReals) {
+		this.listaFiltradaConsolidadoItemStockReals = listaFiltradaConsolidadoItemStockReals;
+	}
+
+	public ConsolidadoStockRealPivoteFacadeLocal getConsolidadoStockRealPivoteFacadeLocal() {
+		return consolidadoStockRealPivoteFacadeLocal;
+	}
+
+	public void setConsolidadoStockRealPivoteFacadeLocal(
+			ConsolidadoStockRealPivoteFacadeLocal consolidadoStockRealPivoteFacadeLocal) {
+		this.consolidadoStockRealPivoteFacadeLocal = consolidadoStockRealPivoteFacadeLocal;
+	}
+
+	public List<ConsolidadoStockRealPivote> getListaConsolidadoStockRealPivote() {
+		return listaConsolidadoStockRealPivote;
+	}
+
+	public void setListaConsolidadoStockRealPivote(
+			List<ConsolidadoStockRealPivote> listaConsolidadoStockRealPivote) {
+		this.listaConsolidadoStockRealPivote = listaConsolidadoStockRealPivote;
+	}
+
+	public List<ConsolidadoStockRealPivote> getListaFiltradaConsolidadoStockRealPivote() {
+		return listaFiltradaConsolidadoStockRealPivote;
+	}
+
+	public void setListaFiltradaConsolidadoStockRealPivote(
+			List<ConsolidadoStockRealPivote> listaFiltradaConsolidadoStockRealPivote) {
+		this.listaFiltradaConsolidadoStockRealPivote = listaFiltradaConsolidadoStockRealPivote;
+	}
+
+	public ArrayList<String> getSelectedColumnsStocks() {
+		return selectedColumnsStocks;
+	}
+
+	public void setSelectedColumnsStocks(ArrayList<String> selectedColumnsStocks) {
+		this.selectedColumnsStocks = selectedColumnsStocks;
+	}
+
+	public ArrayList<String> getColumnsStocks() {
+		return columnsStocks;
+	}
+
+	public void setColumnsStocks(ArrayList<String> columnsStocks) {
+		this.columnsStocks = columnsStocks;
+	}
+
+	public void generarTablaStockReal() {
+
+		try {
+
+			this.listaConsolidadoStockRealPivote = this.consolidadoStockRealPivoteFacadeLocal
+					.findAll(this.anio);
+			fillColumns();
+			//RequestContext.getCurrentInstance().update("tabView:frmStock");
+
+		}
+
+		catch (PersistenceException he) {
+			he.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", he
+							.getMessage()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", e
+							.getMessage()));
+		}
+
+	}// fin del generarTablaStockReal
+
+	public void fillColumns() {
+
+		String[] columnas = { "Enero", "Febrero", "Marzo", "Abril", "Mayo",
+				"Junio", "Julio", "Agosto", "Septiembre", "Octubre",
+				"Noviembre", "Diciembre" };
+
+		int limit = 0;
+		if (mes == null)
+			limit = columnas.length;
+		else
+			limit = mes.intValue();
+
+		selectedColumnsStocks.clear();
+		columnsStocks.clear();
+
+		for (int index = 0; index < limit; index++) {
+			String value = columnas[index];
+
+			this.selectedColumnsStocks.add(value);
+			this.columnsStocks.add(value);
+
+		}
+	}
+	
+	
+	public void exportarPDF() {
+
+		rpt = new Reporte();
+		parametros = new HashMap<String, Object>();
+
+		parametros.put("anio", this.anio);
+		parametros.put("mes", this.mes);
+		
+		String path = "/reportes/stock.jasper";
+
+		try {
+			rpt.exportarPDF(parametros, path, "stock_item");
+
+		} catch (JRException je) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+							.getMessage()));
+			je.printStackTrace();
+		} catch (IOException ie) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+							.getMessage()));
+			ie.printStackTrace();
+		} catch (NumberFormatException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+							"Debe de seleccionar un año"));
+		}
+
+	}// Fin del metodo exportarPDFEgreso
+
+	public void verPdf() {
+		rpt = new Reporte();
+		parametros = new HashMap<String, Object>();
+
+		parametros.put("anio", this.anio);
+		parametros.put("mes", this.mes);
+
+		String path = "/reportes/stock.jasper";
+
+		try {
+			rpt.verPDF(parametros, path, "stock_item");
+
+		} catch (JRException je) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+							.getMessage()));
+			je.printStackTrace();
+		} catch (IOException ie) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+							.getMessage()));
+			ie.printStackTrace();
+		} catch (NumberFormatException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+							"Debe de seleccionar un año"));
+		}
+
+	}//fin del metodo VerPdf
+	
+}

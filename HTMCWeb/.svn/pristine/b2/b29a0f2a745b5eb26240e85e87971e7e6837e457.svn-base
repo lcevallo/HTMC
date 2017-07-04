@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<title>Stock</title>
+</h:head>
+<h:body>
+	<h:form id="frmStock">
+		
+
+		<p:commandButton id="dynaButtonStock" value="Imprimir" type="button"
+			icon="ui-icon-print" />
+		<p:menu overlay="true" trigger="dynaButtonStock" my="left top"
+			at="left bottom">
+			<p:submenu label="Reporte en:">
+				<p:menuitem value="PDF" icon="ui-icon-image"
+					actionListener="#{stockItemBean.exportarPDF()}" ajax="false" />
+				<p:menuitem icon="ui-icon-image">
+					<h:commandLink id="openPopUpStockItem" value="VISOR PDF" target="blankPopUpStockItem"
+						onclick="window.open('','blankPopUpStockItem','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+						actionListener="#{stockItemBean.verPdf()}" ajax="false" />
+				</p:menuitem>
+				<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+			</p:submenu>
+		</p:menu>
+
+		<p:selectCheckboxMenu id="columnsStocks" label="Columnas"
+			style="float:right;" filter="true"
+			value="#{stockItemBean.selectedColumnsStocks}"
+			filterMatchMode="contains" panelStyle="width:272px">
+			<f:selectItems value="#{stockItemBean.columnsStocks}" />
+
+			<p:ajax update=":#{p:component('dtbStock')}" />
+			<p:ajax event="toggleSelect" update=":#{p:component('dtbStock')}" />
+
+
+		</p:selectCheckboxMenu>
+
+
+		<p:dataTable id="dtbStock" var="stockrecord"
+			value="#{stockItemBean.listaConsolidadoStockRealPivote}"
+			paginatorPosition="bottom" paginator="true" rows="10"
+			scrollable="true" frozenColumns="2"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			emptyMessage="No existen datos para presentar">
+
+
+			<f:facet name="header">
+                        Tabla Consolidado Stock Real
+                    </f:facet>
+
+			<p:column style="width:150px;" headerText="Ítem"
+				filterBy="#{stockrecord.id.item}" filterMatchMode="contains">
+				<h:outputText value="#{stockrecord.id.item}"
+					style="width:150px;text-align:center" />
+			</p:column>
+
+			<p:column headerText="Descripción"
+				filterBy="#{stockrecord.descripcion}" filterMatchMode="contains">
+				<h:outputText value="#{stockrecord.descripcion}"
+					styleClass="descripcionItem" />
+			</p:column>
+
+			<p:column styleClass="enero" headerText="Enero"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Enero')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,1)}">
+					<h:outputText value="#{stockrecord.ene}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Febrero"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Febrero')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,2)}">
+					<h:outputText value="#{stockrecord.feb}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Marzo"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Marzo')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,3)}">
+					<h:outputText value="#{stockrecord.mar}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Abril"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Abril')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,4)}">
+					<h:outputText value="#{stockrecord.abr}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Mayo"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Mayo')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,5)}">
+					<h:outputText value="#{stockrecord.may}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Junio"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Junio')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,6)}">
+					<h:outputText value="#{stockrecord.jun}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Julio"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Julio')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,7)}">
+					<h:outputText value="#{stockrecord.jul}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Agosto"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Agosto')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,8)}">
+					<h:outputText value="#{stockrecord.ago}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column headerText="Septiembre"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Septiembre')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,9)}">
+					<h:outputText value="#{stockrecord.sep}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Octubre"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Octubre')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,10)}">
+					<h:outputText value="#{stockrecord.oct}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Noviembre"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Noviembre')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,11)}">
+					<h:outputText value="#{stockrecord.nov}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Diciembre"
+				rendered="#{stockItemBean.selectedColumnsStocks.contains('Diciembre')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogoStock(stockrecord,12)}">
+					<h:outputText value="#{stockrecord.dic}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+
+	</h:form>
+</h:body>
+</html>
+

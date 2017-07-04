@@ -1,0 +1,256 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<style>
+/* Change forzen width */
+.ui-datatable-frozenlayout-left {
+	width: 320px;
+}
+
+tr th {
+	height: 80px;
+}
+
+tbody tr {
+	height: 80px;
+}
+
+.ui-widget-header .ui-inputfield {
+	width: 75px;
+}out
+
+.ui-selectcheckboxmenu-header .ui-inputfield {
+	width: 196px !important;
+}
+</style>
+
+</h:head>
+<body>
+
+	<h:form id="frmStockSf">
+
+		<p:commandButton id="dynaButtonStockSf" value="Imprimir" type="button"
+			icon="ui-icon-print" />
+		<p:menu overlay="true" trigger="dynaButtonStockSf" my="left top"
+			at="left bottom">
+			<p:submenu label="Reporte en:">
+				<p:menuitem value="PDF" icon="ui-icon-image"
+					actionListener="#{stockSFItemBean.exportarPDF()}" ajax="false" />
+				<p:menuitem icon="ui-icon-image">
+					<h:commandLink id="openPopUp" value="VISOR PDF"
+						target="blankPopUpStock"
+						onclick="window.open('','blankPopUpStock','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+						actionListener="#{stockSFItemBean.verPdf()}" ajax="false" />
+				</p:menuitem>
+				<p:menuitem value="EXCEL" icon="ui-icon-xls" ajax="false" >
+				<p:dataExporter fileName="#{stockSFItemBean.nombre_archivo}"  postProcessor="#{stockSFItemBean.exportarExcel}" target="dtbConsolidadoPivoteStockSF" type="xls"></p:dataExporter>
+				</p:menuitem>
+			</p:submenu>
+		</p:menu>
+		
+
+		<p:selectCheckboxMenu id="columnsIngresos" label="Columnas"
+			style="float:right;" filter="true"
+			value="#{stockSFItemBean.selectedColumnsStocks}"
+			filterMatchMode="contains" panelStyle="width:272px">
+			<f:selectItems value="#{stockSFItemBean.columnsStocks}" />
+
+			<p:ajax update=":#{p:component('dtbConsolidadoPivoteStockSF')}" />
+			<p:ajax event="toggleSelect"
+				update=":#{p:component('dtbConsolidadoPivoteStockSF')}" />
+		</p:selectCheckboxMenu>
+
+
+		<p:dataTable id="dtbConsolidadoPivoteStockSF" var="stockrecord" widgetVar="dtbConsolidadoPivoteStockSF"
+			value="#{stockSFItemBean.dtblStockRealPivote}"
+			paginatorPosition="bottom" paginator="true" rows="10"
+			scrollable="true" frozenColumns="2"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			emptyMessage="No existen datos para presentar"
+			filteredValue="#{stockSFItemBean.filtradoStockRealPivote}"
+			>
+
+
+
+			<f:facet name="header">
+                        Tabla Stock Real (Metodo Amortiz.) 
+                    </f:facet>
+
+			
+			<p:column style="width:120px;" headerText="CNMB">
+				<h:outputText
+					value="#{stockrecord.cuadroBase}"
+					style="width:150px;text-align:center" />
+			</p:column>
+			
+			
+			<p:column style="width:120px;" headerText="Ítem" 
+				filterBy="#{stockrecord.consolidadoStockRealPivoteSfPK.item}"
+				filterMatchMode="contains">
+				<h:outputText
+					value="#{stockrecord.consolidadoStockRealPivoteSfPK.item}"
+					style="width:150px;text-align:center" />
+			</p:column>
+
+			<p:column headerText="Descripción"
+				filterBy="#{stockrecord.descripcion}" filterMatchMode="contains" >
+				<h:outputText value="#{stockrecord.descripcion}"
+					styleClass="descripcionItem" />
+			</p:column>
+
+			<p:column colspan="1" headerText="Enero" styleClass="enero"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Enero')}" filterBy="#{stockrecord.ene}"  filterFunction="#{stockSFItemBean.filtrarConRango}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,1)}">
+
+					<h:outputText value="#{stockrecord.ene}"
+						style="#{stockrecord.ene lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+
+			<p:column colspan="1" headerText="Febrero" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Febrero')}" filterBy="#{stockrecord.feb}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,2)}">
+					<h:outputText value="#{stockrecord.feb}"
+					style="#{stockrecord.feb lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column colspan="1" headerText="Marzo" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Marzo')}" filterBy="#{stockrecord.mar}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,3)}">
+					<h:outputText value="#{stockrecord.mar}" 
+					style="#{stockrecord.mar lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+
+
+			</p:column>
+
+			<p:column colspan="1" headerText="Abril" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Abril')}" filterBy="#{stockrecord.abr}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,4)}">
+					<h:outputText value="#{stockrecord.abr}"
+					style="#{stockrecord.abr lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column colspan="1" headerText="Mayo" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Mayo')}" filterBy="#{stockrecord.may}"  filterFunction="#{stockSFItemBean.filtrarConRango}"  >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,5)}">
+					<h:outputText value="#{stockrecord.may}"
+					style="#{stockrecord.may lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column colspan="1" headerText="Junio" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Junio')}" filterBy="#{stockrecord.jun}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,6)}">
+					<h:outputText value="#{stockrecord.jun}"
+					style="#{stockrecord.jun lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column colspan="1" headerText="Julio" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Julio')}" filterBy="#{stockrecord.jul}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,7)}">
+					<h:outputText value="#{stockrecord.jul}"
+					style="#{stockrecord.jul lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column colspan="1" headerText="Agosto" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Agosto')}" filterBy="#{stockrecord.ago}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,8)}">
+					<h:outputText value="#{stockrecord.ago}"
+					style="#{stockrecord.ago lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column colspan="1" headerText="Septiembre" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Septiembre')}" filterBy="#{stockrecord.sep}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,9)}">
+					<h:outputText value="#{stockrecord.sep}"
+					style="#{stockrecord.sep lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column colspan="1" headerText="Octubre" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Octubre')}" filterBy="#{stockrecord.oct}"  filterFunction="#{stockSFItemBean.filtrarConRango}">
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,10)}">
+					<h:outputText value="#{stockrecord.oct}"
+					style="#{stockrecord.oct lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column filterBy="#{stockrecord.nov}" colspan="1" headerText="Noviembre" style="width:150px;" 
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Noviembre')}" filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,11)}">
+					<h:outputText value="#{stockrecord.nov}"
+					style="#{stockrecord.nov lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column colspan="1" headerText="Diciembre" style="width:150px;"
+				rendered="#{stockSFItemBean.selectedColumnsStocks.contains('Diciembre')}" filterBy="#{stockrecord.dic}"  filterFunction="#{stockSFItemBean.filtrarConRango}" >
+				<p:commandLink
+					actionListener="#{stockSFItemBean.invocarDialogo(stockrecord,12)}">
+					<h:outputText value="#{stockrecord.dic}"
+					style="#{stockrecord.dic lt 0 ? 'color: red;' : 'color:green;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+
+
+		</p:dataTable>
+
+	</h:form>
+
+
+</body>
+</html>

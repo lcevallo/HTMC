@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+	<p:dialog header="Seleccione el rango de fechas" modal="true"
+		showEffect="fade" hideEffect="fade" widgetVar="excelCorteWidget"
+		width="40%" position="top" appendToBody="false" draggable="false"
+		closeOnEscape="true" resizable="true" id="excelCorteWidget">
+
+		<h:form id="formDialogCorteExcel">
+			<p:growl id="mensajes" showDetail="true" life="3000" />
+			<p:panelGrid columns="2" cellpadding="5">
+
+				<p:outputLabel for="calExcelCorteInicial" value="Fecha Inicial:" />
+				<p:calendar id="calExcelCorteInicial" required="true"
+					value="#{consolidadoBean.fechaCorteInicial}" showOn="button" />
+
+				<p:outputLabel for="calExcelCorteFinal" value="Fecha Final:" />
+				<p:calendar id="calExcelCorteFinal" required="true"
+					value="#{consolidadoBean.fechaCorteFinal}" showOn="button" />
+
+			</p:panelGrid>
+			<p:commandButton value="Bajar Corte" update="mensajes"
+				process="formDialogCorteExcel" validateClient="true" ajax="true"
+				oncomplete="if (!args.validationFailed){ 
+				document.getElementById('formularioOculto1:ocultoExcelDireccion').click();
+				}" />
+		</h:form>
+		<h:form id="formularioOculto1">
+			<p:commandButton ajax="false"
+				actionListener="#{consolidadoBean.generarCorte}"
+				id="ocultoExcelDireccion" style="display:none;" />
+		</h:form>
+
+	</p:dialog>
+
+</ui:composition>
+
+

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="HTMC-ejbPU" transaction-type="JTA">
+	<!--  HTMCEJB-->
+		<jta-data-source>java:/PostgreSQL</jta-data-source>
+		<class>Entities.ApplicationArea</class>
+		<class>Entities.AreaItem</class>
+		<class>Entities.AreaItemPK</class>
+		<class>Entities.ConsolidadoAjusteEgreso</class>
+		<class>Entities.ConsolidadoAjusteEgresoPK</class>
+		<class>Entities.ConsolidadoAjusteIngreso</class>
+		<class>Entities.ConsolidadoAjusteIngresoPK</class>
+		<class>Entities.ConsolidadoAlerta</class>
+		<class>Entities.ConsolidadoAlertaPK</class>
+		<class>Entities.ConsolidadoAnual</class>
+		<class>Entities.ConsolidadoAnualPK</class>
+		<class>Entities.ConsolidadoAnualPivote</class>
+		<class>Entities.ConsolidadoAnualPivotePK</class>
+		<class>Entities.ConsolidadoEgreso</class>
+		<class>Entities.ConsolidadoEgresoPK</class>
+		<class>Entities.ConsolidadoIngreso</class>
+		<class>Entities.ConsolidadoIngresoPK</class>
+		<class>Entities.ConsolidadoItemPercentil</class>
+		<class>Entities.ConsolidadoItemPercentilPK</class>
+		<class>Entities.ConsolidadoItemStockReal</class>
+		<class>Entities.ConsolidadoItemStockRealPK</class>
+		<class>Entities.ConsolidadoOtroEgreso</class>
+		<class>Entities.ConsolidadoOtroEgresoPK</class>
+		<class>Entities.ConsolidadoSaldo</class>
+		<class>Entities.ConsolidadoStockRealMinimoPivote</class>
+		<class>Entities.ConsolidadoStockRealMinimoPivotePK</class>
+		<class>Entities.ConsolidadoStockRealPivote</class>
+		<class>Entities.ConsolidadoStockRealPivotePK</class>
+		<class>Entities.ConsolidadoStockRealPivoteSf</class>
+		<class>Entities.ConsolidadoStockRealPivoteSfPK</class>
+		<class>Entities.ConsolidadoTransferencia</class>
+		<class>Entities.ConsolidadoTransferenciaPK</class>
+		<class>Entities.EgresoItem</class>
+		<class>Entities.EgresoItemPK</class>
+		<class>Entities.EgresoItemsCopy</class>
+		<class>Entities.IngresoItem</class>
+		<class>Entities.IngresoItemPK</class>
+		<class>Entities.Item</class>
+		<class>Entities.ItemMaxMin</class>
+		<class>Entities.ItemMaxMinPK</class>
+		<class>Entities.MatrixCode</class>
+		<class>Entities.MatrixCodePK</class>
+		
+		<class>Entities.Option</class>
+		<class>Entities.PlantillaExcelCorte</class>
+		<class>Entities.PlantillaExcelCortePK</class>
+		<class>Entities.Rol</class>
+		<class>Entities.UnidadDependencia</class>
+		<class>Entities.Usuario</class>
+		<class>Entities.VistaCaducidad</class>
+		<class>Entities.VistaConsolidadoStockRealPivote</class>	
+		<class>Entities.VistaItemDetalleStockSf</class>
+		<class>Entities.VistaIngresoMaximoMinimo</class>	
+	</persistence-unit>
+
+</persistence>

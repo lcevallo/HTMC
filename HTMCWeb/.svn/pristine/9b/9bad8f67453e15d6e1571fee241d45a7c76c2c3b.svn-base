@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<title>Stock</title>
+</h:head>
+<h:body>
+	<h:form id="frmStockMinimo">
+		
+
+		<p:commandButton id="dynaButtonStockMinimo" value="Imprimir"
+			type="button" icon="ui-icon-print" />
+		<p:menu overlay="true" trigger="dynaButtonStockMinimo" my="left top"
+			at="left bottom">
+			<p:submenu label="Reporte en:">
+				<p:menuitem value="PDF" icon="ui-icon-image" actionListener="#{stockRealItemBean.exportarPDF()}" ajax="false" />
+				<p:menuitem value="VISOR PDF" icon="ui-icon-image" ajax="false" >
+				<h:commandLink id="openPopUpStockRealMinimo" value="VISOR PDF" target="blankPopUpStockRealMinimo"
+						onclick="window.open('','blankPopUpStockRealMinimo','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+						actionListener="#{stockRealItemBean.verPdf()}" ajax="false" />
+				</p:menuitem>
+				
+				<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+			</p:submenu>
+		</p:menu>
+
+		<p:selectCheckboxMenu id="columnsStocksMinimo" label="Columnas"
+			style="float:right;" filter="true"
+			value="#{stockRealItemBean.selectedColumnsStocksMinimo}"
+			filterMatchMode="contains" panelStyle="width:272px">
+			<f:selectItems value="#{stockRealItemBean.columnsStocksMinimo}" />
+
+			<p:ajax update=":#{p:component('dtbStock')}" />
+			<p:ajax event="toggleSelect"
+				update=":#{p:component('dtbStockMinimo')}" />
+
+
+		</p:selectCheckboxMenu>
+
+
+		<p:dataTable id="dtbStockMinimo" var="stockrecord"
+			value="#{stockRealItemBean.listaConsolidadoItemStockMinimo}"
+			paginatorPosition="bottom" paginator="true" rows="10"
+			scrollable="true" frozenColumns="2"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			emptyMessage="No existen datos para presentar">
+
+
+			<f:facet name="header">
+                        Tabla Stock Real Mínimo (Stock REAL/PERCENTIL) POR MESES
+                    </f:facet>
+			
+			
+			<p:column style="width:150px;" headerText="CNMB" >
+				<h:outputText value="#{stockrecord.cuadroBase}"
+					style="width:150px;text-align:center" />
+			</p:column>
+			
+			
+			<p:column style="width:150px;" headerText="Ítem"
+				filterBy="#{stockrecord.id.item}" filterMatchMode="contains">
+				<h:outputText value="#{stockrecord.id.item}"
+					style="width:150px;text-align:center" />
+			</p:column>
+
+			<p:column headerText="Descripción"
+				filterBy="#{stockrecord.descripcion}" filterMatchMode="contains">
+				<h:outputText value="#{stockrecord.descripcion}"
+					styleClass="descripcionItem" />
+			</p:column>
+
+			<p:column styleClass="enero" headerText="Enero"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Enero')}"
+				style="width:150px;text-align:center">
+				<h:outputText value="#{stockrecord.ene}"
+				style="#{stockrecord.ene lt 0 ? 'color: red;' : 'color:green;'}">
+				<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Febrero"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Febrero')}"
+				style="width:150px;text-align:center">
+				<h:outputText value="#{stockrecord.feb}"
+				style="#{stockrecord.feb lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Marzo"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Marzo')}"
+				style="width:150px;text-align:center">
+				<h:outputText value="#{stockrecord.mar}"
+				style="#{stockrecord.mar lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Abril"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Abril')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.abr}"
+                                              style="#{stockrecord.abr lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Mayo"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Mayo')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.may}"
+				style="#{stockrecord.may lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Junio"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Junio')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.jun}"
+                                              style="#{stockrecord.jun lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Julio"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Julio')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.jul}"
+                                              style="#{stockrecord.jul lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Agosto"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Agosto')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.ago}"
+                                              style="#{stockrecord.ago lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+
+			<p:column headerText="Septiembre"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Septiembre')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.sep}"
+                                              style="#{stockrecord.sep lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Octubre"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Octubre')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.oct}"
+                                              style="#{stockrecord.oct lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Noviembre"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Noviembre')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.nov}"
+                                              style="#{stockrecord.nov lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Diciembre"
+				rendered="#{stockRealItemBean.selectedColumnsStocksMinimo.contains('Diciembre')}"
+				style="width:150px;text-align:center">
+
+				<h:outputText value="#{stockrecord.dic}"
+                                              style="#{stockrecord.dic lt 0 ? 'color: red;' : 'color:green;'}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+
+			</p:column>
+
+		</p:dataTable>
+
+	</h:form>
+</h:body>
+</html>
+

@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>Clasificar fármaco</title>
+	<h:outputStylesheet name="./css/default.css" />
+	<h:outputStylesheet name="./css/cssLayout.css" />
+
+	<style>
+/* Change forzen width */
+.ui-datatable-frozenlayout-left {
+	width: 320px;
+}
+
+tr th {
+	height: 50px;
+}
+
+tbody tr {
+	height: 50px;
+}
+
+.ui-widget-header .ui-inputfield {
+	width: 75px;
+}
+
+.ui-selectcheckboxmenu-header .ui-inputfield {
+	width: 196px !important;
+}
+</style>
+</h:head>
+
+
+
+<h:body>
+	<div id="top">
+
+		<img src="#{appBean.baseUrl}/resources/images/LOGO_HTMC.png" />
+
+		<h1>Sistema Control de Inventario de Fármacos</h1>
+	</div>
+	<div class="container">
+
+
+		<script type="text/javascript">
+			function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide()
+			}
+		</script>
+
+		<h:form id="form">
+			<p:dialog id="dialog" modal="true" widgetVar="statusDialog"
+				header="Descargando archivo" draggable="false" closable="false"
+				resizable="false">
+				<div style="text-align: center;">
+					<h:graphicImage style="width:32px;height:32px;"
+						value="#{appBean.baseUrl}/resources/images/loading.gif" />
+				</div>
+			</p:dialog>
+			<f:metadata>
+				<f:event
+					listener="#{itemEspecialidadBean.fillColumns('form:itemsTable')}"
+					type="postAddToView" update="@all" />
+			</f:metadata>
+			<p:growl id="growl" showDetail="false" life="1500" />
+			<p:selectCheckboxMenu id="columns" label="Columnas"
+				style="float:right;" filter="true"
+				value="#{itemEspecialidadBean.selectedColumns}"
+				filterMatchMode="contains" panelStyle="width:272px">
+				<f:selectItems value="#{itemEspecialidadBean.columns}" />
+
+				<p:ajax update="#{p:component('itemsTable')}, panel" />
+				<p:ajax event="toggleSelect"
+					update="#{p:component('itemsTable')}, panel" />
+
+
+			</p:selectCheckboxMenu>
+
+			<p:panel id="panel" header="Clasificación del fármaco">
+
+				<p:dataTable id="itemsTable" var="record" scrollable="true"
+					value="#{itemEspecialidadBean.dataModel}" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15" widgetVar="itemsTable"
+					filteredValue="#{itemEspecialidadBean.filteredListaMedicamento}"
+					emptyMessage="No existen datos para presentar">
+
+					<p:column filterBy="#{record[0]}" rendered="#{true}"
+						style="width: 120px;" filterMatchMode="contains"
+						headerText="Código">
+						<h:outputText value="#{record[0]}" />
+					</p:column>
+
+
+					<p:column style="width: 120px;" filterBy="#{record[1]}"
+						rendered="#{true}" filterMatchMode="contains" headerText="Fármaco">
+						<h:outputText value="#{record[1]}" />
+					</p:column>
+
+					<c:forEach var="column" varStatus="index" begin="2"
+						items="#{itemEspecialidadBean.applicationAreas}">
+						<p:column headerText="#{column.areaDescripcion}"
+							style="width:150px;"
+							rendered="#{itemEspecialidadBean.selectedColumns.contains(column.areaDescripcion)}">
+
+
+
+							<p:selectBooleanCheckbox value="#{record[index.index]}">
+								<p:ajax event="change"
+									listener="#{itemEspecialidadBean.actualizarEstado}"
+									update=":#{p:component('itemsTable')}, :form:panel" />
+								<f:attribute name="idItem" value="#{record.codigoItem}" />
+								<f:attribute name="idEspecialidad" value="#{column.idArea}" />
+							</p:selectBooleanCheckbox>
+
+
+
+						</p:column>
+					</c:forEach>
+
+
+
+
+
+				</p:dataTable>
+
+				<p:blockUI id="blockUI" block="itemsTable"
+					trigger="itemsTable, form:columns">
+        Procesando<br />
+					<h:graphicImage style="width:25px;height:25px;"
+						value="#{appBean.baseUrl}/resources/images/loading.gif" />
+				</p:blockUI>
+
+
+
+			</p:panel>
+
+
+
+		</h:form>
+
+	</div>
+</h:body>
+</html>
+

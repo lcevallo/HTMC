@@ -1,0 +1,38 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package SessionBeans;
+
+import java.util.List;
+
+import javax.ejb.Local;
+
+import Entities.VistaIngresoMaximoMinimo;
+
+/**
+ *
+ * @author Bryan
+ */
+@Local
+public interface VistaItemMaxMinFacadeLocal {
+
+	void create(VistaIngresoMaximoMinimo VistaIngresoMaximoMinimo);
+
+	void edit(VistaIngresoMaximoMinimo VistaIngresoMaximoMinimo);
+
+	void remove(VistaIngresoMaximoMinimo VistaIngresoMaximoMinimo);
+
+	VistaIngresoMaximoMinimo find(Object id);
+
+	List<VistaIngresoMaximoMinimo> findAll();
+
+	List<VistaIngresoMaximoMinimo> findRange(int[] range);
+
+	int count();
+	
+	String guardarMaximo(String usuario, String item,Integer minimo);
+
+}

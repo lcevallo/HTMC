@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+
+	<style>
+.fechaTexto {
+	clear: both;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left;
+}
+</style>
+</h:head>
+<h:body>
+	<ui:composition>
+	
+<p:dialog header="Caducidad del ítem" modal="true" showEffect="fade"
+		hideEffect="fade" widgetVar="dialogWidgetCaducidad" width="50%" position="top"
+		appendToBody="false" draggable="true" resizable="false" id="dialogWidgetCaducidad">
+
+		<h:form id="formRecordItemCaducidad">
+
+	<p:commandButton id="dynaButtonRecordItemCaducidad" value="Imprimir"
+				type="button" icon="ui-icon-print" />
+			<p:menu overlay="true" trigger="dynaButtonRecordItemCaducidad" my="left top"
+				at="left bottom">
+				<p:submenu label="Reporte en:">
+					<p:menuitem value="PDF" icon="ui-icon-image"
+						actionListener="#{caducidadBean.exportarPDFDetalle}"
+						ajax="false" />
+					<p:menuitem icon="ui-icon-image">
+							<h:commandLink id="openPopUpItemDetalleCaducidad"
+								value="VISOR PDF" target="openPopUpItemDetalleCaducidad"
+								onclick="window.open('','openPopUpItemDetalleCaducidad','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+								actionListener="#{caducidadBean.verPDFDetalle}" ajax="false" />
+						</p:menuitem>
+
+					<p:menuitem value="EXCEL" icon="ui-icon-xls" 
+					actionListener="#{caducidadBean.exportarExcelDetalle}"
+						ajax="false"
+					/>
+				</p:submenu>
+			</p:menu>
+
+
+			<p:dataTable id="tablaCaducidad" var="record"
+				styleClass="tableDialog"
+				value="#{caducidadBean.selectedListaCaducidad}" scrollHeight="100%"
+				paginatorPosition="top" paginator="true" rows="5">
+				<f:facet name="header">
+                        Caducidad del ítem:  <h:outputLabel
+						value="#{caducidadBean.selectedVistaCaducidad.itemfk}" />
+					<br />
+					<h3>#{caducidadBean.selectedVistaCaducidad.descripcion}</h3>
+				</f:facet>
+
+				<p:column headerText="Lote">
+					<h:outputText value="#{record[0]}" />
+				</p:column>
+
+				<p:column headerText="Fecha de caducidad">
+					<h:outputText value="#{record[1]}" />
+				</p:column>
+
+				<p:column headerText="Cantidad">
+					<h:outputText value="#{record[2]}" />
+				</p:column>
+
+				<p:column headerText="Días para caducación">
+					<h:outputText value="#{record[3]} días"
+						rendered="#{record[3] gt 1}" />
+					<h:outputText value="#{record[3]} día" rendered="#{record[3] eq 1}" />
+					<h:outputText value="Caducado con: #{record[3] * -1} días"
+						rendered="#{record[3] lt 1}" />
+				</p:column>
+
+
+
+			</p:dataTable>
+
+
+		</h:form>
+
+
+
+	</p:dialog>
+
+	</ui:composition>
+
+</h:body>
+</html>

@@ -1,0 +1,38 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package SessionBeans;
+
+import java.util.List;
+
+import javax.ejb.Local;
+
+import Entities.ConsolidadoItemStockReal;
+
+/**
+ *
+ * @author lcevallos
+ */
+@Local
+public interface ConsolidadoItemStockRealFacadeLocal {
+
+    void create(ConsolidadoItemStockReal consolidadoItemStockReal);
+
+    void edit(ConsolidadoItemStockReal consolidadoItemStockReal);
+
+    void remove(ConsolidadoItemStockReal consolidadoItemStockReal);
+
+    ConsolidadoItemStockReal find(Object id);
+
+    List<ConsolidadoItemStockReal> findAll();
+    
+    List<ConsolidadoItemStockReal> findAll(int year);
+    
+    List<ConsolidadoItemStockReal> findRange(int[] range);
+
+    int count();
+    
+}

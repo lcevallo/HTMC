@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>Matriz de códigos</title>
+	<h:outputStylesheet name="./css/default.css" />
+	<h:outputStylesheet name="./css/cssLayout.css" />
+
+	<style>
+/* Change forzen width */
+.ui-datatable-frozenlayout-left {
+	width: 420px;
+}
+
+tr th {
+	height: 50px;
+}
+
+tbody tr {
+	height: 50px;
+}
+
+.ui-widget-header .ui-inputfield {
+	width: 75px;
+}
+
+.ui-selectcheckboxmenu-header .ui-inputfield {
+	width: 196px !important;
+}
+</style>
+</h:head>
+
+
+
+<h:body>
+	<div id="top">
+
+		<p:fieldset legend="" style="width: 20%; float: right;">
+			<h:form id="loginForm">
+
+				<h:outputLabel style="font-weight: bold;" value="Usuario: " />
+				<h:outputText
+					value="#{(userInSession.nombre).concat(' ').concat(userInSession.apellido)}" />
+
+				<p:commandLink id="logOut" process="@this"
+					action="#{loginBean.logOut}"
+					style="vertical-align: middle; float:right;">
+					<p:graphicImage value="/resources/images/exit.png" width="28px"
+						height="28px" style="vertical-align: middle;" />
+				</p:commandLink>
+				<br />
+				<h:outputLabel
+					style="font-weight: bold;width:53px; text-align:right;display:inline-block;"
+					value="Rol: " />
+				<h:outputText value=" Personal de Sistemas" />
+
+
+
+			</h:form>
+
+		</p:fieldset>
+		<img src="#{appBean.baseUrl}/resources/images/LOGO_HTMC.png" />
+
+		<h1>Sistema Control de Inventario de Fármacos</h1>
+	</div>
+	<div class="container">
+
+
+		<script type="text/javascript">
+			function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide()
+			}
+		</script>
+
+		<h:form id="form">
+			<p:dialog id="dialog" modal="true" widgetVar="statusDialog"
+				header="Descargando archivo" draggable="false" closable="false"
+				resizable="false">
+				<div style="text-align: center;">
+					<h:graphicImage style="width:32px;height:32px;"
+						value="#{appBean.baseUrl}/resources/images/loading.gif" />
+				</div>
+			</p:dialog>
+			<f:metadata>
+				<f:event listener="#{matrixCodeBean.fillColumns('form:itemsTable')}"
+					type="postAddToView" update="@all" />
+			</f:metadata>
+			<p:growl id="growl" showDetail="false" life="1500" />
+			<p:selectCheckboxMenu id="columns" label="Columnas"
+				style="float:right;" filter="true"
+				valueChangeListener="#{matrixCodeBean.valueChange}"
+				value="#{matrixCodeBean.selectedColumns}" filterMatchMode="contains"
+				panelStyle="width:272px">
+				<f:selectItems value="#{matrixCodeBean.columns}" />
+
+				<p:ajax update="#{p:component('itemsTable')}" />
+				<p:ajax event="toggleSelect" update="#{p:component('itemsTable')}" />
+
+
+			</p:selectCheckboxMenu>
+
+			<p:panel id="panel" header="Matriz de códigos">
+
+				<p:dataTable id="itemsTable" var="record" scrollable="true"
+					value="#{matrixCodeBean.listaMedicamento}" paginator="true"
+					rows="8" editable="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15" widgetVar="itemsTable"
+					filteredValue="#{matrixCodeBean.filteredListaMedicamento}"
+					emptyMessage="No existen datos para presentar" frozenColumns="2">
+
+					<p:column filterBy="#{record.codigoItem}" rendered="#{true}" sortBy="#{record.codigoItem}"
+						style="width: 120px;" filterMatchMode="contains"
+						headerText="Código">
+						<h:outputText value="#{record.codigoItem}" />
+					</p:column>
+
+					<p:column filterBy="#{record.descripcion}" rendered="#{true}" sortBy="#{record.descripcion}"
+						filterMatchMode="contains" headerText="Fármaco">
+						<h:outputText value="#{record.descripcion}" />
+					</p:column>
+					
+					<p:columns value="#{matrixCodeBean.unidadDependencias}"
+						var="column" headerText="#{column.nombreUnidad}"
+						style="width:150px;"
+						rendered="#{matrixCodeBean.selectedColumns.contains(column.nombreUnidad)}">
+						<p:inputText immediate="true"
+							value="#{matrixCodeBean.map[record.codigoItem.concat('-').concat(column.id)]}">
+
+							<p:ajax event="blur"
+								listener="#{matrixCodeBean.actualizarEstado}" />
+							<f:attribute name="idItem" value="#{record.codigoItem}" />
+							<f:attribute name="idDependencia" value="#{column.id}" />
+
+						</p:inputText>
+
+					</p:columns>
+
+
+				</p:dataTable>
+				<p:commandButton id="excel" ajax="false" value="Excel"
+					onclick="PrimeFaces.monitorDownload(start, stop)">
+
+					<p:dataExporter type="xls" target="itemsTable"
+						fileName="clasificación_fármacos"
+						postProcessor="#{matrixCodeBean.postProcessXLS}" />
+
+				</p:commandButton>
+				<p:blockUI id="blockUI" block="itemsTable"
+					trigger="itemsTable, form:columns">
+        Procesando<br />
+					<h:graphicImage style="width:25px;height:25px;"
+						value="#{appBean.baseUrl}/resources/images/loading.gif" />
+				</p:blockUI>
+
+
+
+			</p:panel>
+
+
+
+		</h:form>
+
+	</div>
+</h:body>
+</html>
+

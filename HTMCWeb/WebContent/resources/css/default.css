@@ -1,0 +1,89 @@
+* {
+	font-family: Arial !important;
+	font-size: 13px;
+}
+
+body {
+	background-color: #ffffff;	
+	color: #000000;
+	margin: 10px;
+	color: #000000;
+}
+
+h1 {
+	border-bottom: 1px solid #AFAFAF;	
+	font-weight: bold;
+	font-size: 24px;
+	margin: 0px;
+	padding: 0px;
+	color: #D20005;
+}
+
+a:link, a:visited {
+	color: #045491;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:link:hover, a:visited:hover {
+	color: #045491;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+/*
+** Regla CSS que ayuda a obtener una mejor apariencia de las tablas contenidas en otros componentes.
+*/
+.ui-panel .ui-panel-content {
+	padding: 5px 0px !important;
+}
+
+.ui-tabs .ui-tabs-panel {
+	padding: 1em 0em !important;
+}
+
+/*
+** Centrar texto en tablas.
+*/
+.ui-datatable tbody td {
+	text-align: center !important;
+}
+
+/**
+** Para los textos de descripción en las tablas
+*/
+.descripcionItem {
+	clear: both;
+	display: inline-block;
+	overflow: hidden;
+	/*white-space: nowrap;*/
+	/*float: left;*/
+	font-size: small;
+}
+
+.tituloDescripcion {
+	text-align: left;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+ .flex-init-setup {
+width:1900px;
+height:700px;
+ }
+ .mes_alerta_mini {
+   width:14.5%;
+ }
+
+ #tabView:frmAlertaMaximoMinimoxBodega:j_idt505
+ {
+   width: 100% !important;
+   height: 100% !important;
+ }
+ 
+ /*
+.ui-carousel ui-widget ui-widget-content ui-corner-all{
+   width: 100% !important;
+   height: 100% !important;
+ }
+ */

@@ -1,0 +1,628 @@
+package ManagedBeans;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
+
+import net.sf.jasperreports.engine.JRException;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import Entities.ConsolidadoStockRealPivoteSf;
+import SessionBeans.ConsolidadoStockRealPivoteSfFacadeLocal;
+import Utility.Reporte;
+
+@ManagedBean
+@ViewScoped
+public class StockSFItemBean implements Serializable {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private List<ConsolidadoStockRealPivoteSf> dtblStockRealPivote;
+    private List<ConsolidadoStockRealPivoteSf> filtradoStockRealPivote;
+    private Integer anio;
+    private Integer mes;
+    private Reporte rpt;
+    private  String nombre_archivo;
+    private HashMap<String, Object> parametros;
+    private ArrayList<String> selectedColumnsStocks = new ArrayList<>();
+    private ArrayList<String> columnsStocks = new ArrayList<>();
+    private StreamedContent PDFStream;
+    
+    
+    
+    @EJB
+    private ConsolidadoStockRealPivoteSfFacadeLocal facadeLocalStockPivoteSF;
+
+    @ManagedProperty(value = "#{itemStockSfDetalleBean}")
+    ItemStockSfDetalleBean itemStockSfDetalleBean;
+
+    public StockSFItemBean() {
+
+    }
+
+    @PostConstruct
+    public void init() {
+        fillColumns();
+    }
+
+    public Integer getAnio() {
+        return anio;
+    }
+
+    public void setAnio(Integer anio) {
+        this.anio = anio;
+    }
+
+    public Integer getMes() {
+        return mes;
+    }
+
+    public void setMes(Integer mes) {
+        this.mes = mes;
+    }
+
+    public Reporte getRpt() {
+        return rpt;
+    }
+
+    public void setRpt(Reporte rpt) {
+        this.rpt = rpt;
+    }
+    
+    public String getNombre_archivo() {
+		return nombre_archivo;
+	}
+
+	public void setNombre_archivo(String nombre_archivo) {
+		this.nombre_archivo = nombre_archivo;
+	}
+
+	public HashMap<String, Object> getParametros() {
+        return parametros;
+    }
+
+    public void setParametros(HashMap<String, Object> parametros) {
+        this.parametros = parametros;
+    }
+
+    public List<ConsolidadoStockRealPivoteSf> getDtblStockRealPivote() {
+        return dtblStockRealPivote;
+    }
+
+    public void setDtblStockRealPivote(
+            List<ConsolidadoStockRealPivoteSf> dtblStockRealPivote) {
+        this.dtblStockRealPivote = dtblStockRealPivote;
+    }
+
+    public List<ConsolidadoStockRealPivoteSf> getFiltradoStockRealPivote() {
+        return filtradoStockRealPivote;
+    }
+
+    public void setFiltradoStockRealPivote(
+            List<ConsolidadoStockRealPivoteSf> filtradoStockRealPivote) {
+        this.filtradoStockRealPivote = filtradoStockRealPivote;
+    }
+    
+    
+    public StreamedContent getPDFStream() {
+		return PDFStream;
+	}
+
+	public void setPDFStream(StreamedContent pDFStream) {
+		PDFStream = pDFStream;
+	}
+
+	/**
+     * @return the selectedColumnsStocks
+     */
+    public ArrayList<String> getSelectedColumnsStocks() {
+        return selectedColumnsStocks;
+    }
+
+    /**
+     * @param selectedColumnsStocks the selectedColumnsStocks to set
+     */
+    public void setSelectedColumnsStocks(ArrayList<String> selectedColumnsStocks) {
+        this.selectedColumnsStocks = selectedColumnsStocks;
+    }
+
+    /**
+     * @return the columnsStocks
+     */
+    public ArrayList<String> getColumnsStocks() {
+        return columnsStocks;
+    }
+
+    /**
+     * @param columnsStocks the columnsStocks to set
+     */
+    public void setColumnsStocks(ArrayList<String> columnsStocks) {
+        this.columnsStocks = columnsStocks;
+    }
+
+    public ItemStockSfDetalleBean getItemStockSfDetalleBean() {
+        return itemStockSfDetalleBean;
+    }
+
+    public void setItemStockSfDetalleBean(ItemStockSfDetalleBean itemStockSfDetalleBean) {
+        this.itemStockSfDetalleBean = itemStockSfDetalleBean;
+    }
+
+    public void fillColumns() {
+
+        String[] columnas = {"Enero", "Febrero", "Marzo", "Abril", "Mayo",
+            "Junio", "Julio", "Agosto", "Septiembre", "Octubre",
+            "Noviembre", "Diciembre"};
+
+//        int limit = 0;
+//        if (mes == null) {
+//            limit = columnas.length;
+//        } else {
+//            limit = mes.intValue();
+//        }
+        getSelectedColumnsStocks().clear();
+        getColumnsStocks().clear();
+
+        for (int index = 0; index < columnas.length; index++) {
+            String value = columnas[index];
+
+            this.getSelectedColumnsStocks().add(value);
+            this.getColumnsStocks().add(value);
+
+        }
+    }//fin del metodo fillColumns
+
+    public void getTableStockPivoteSf() {
+
+        try {
+
+            this.dtblStockRealPivote = this.facadeLocalStockPivoteSF.findAll(this.anio);
+            fillColumns();
+
+        } catch (PersistenceException he) {
+            he.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", he
+                            .getMessage()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", e
+                            .getMessage()));
+        }
+    }
+    
+    
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public boolean filtrarConRango(Object value, Object filter, Locale locale) {
+		String filterText = (filter == null) ? null : filter.toString().trim();
+		if (filterText == null || filterText.equals(""))
+			return true;
+
+		if (value == null)
+			return false;
+
+		String pattern = "([-]?\\d+(?:\\.\\d+)?)";
+		if (filterText.matches(pattern))
+			return new BigDecimal(value.toString()).compareTo(new BigDecimal(
+					filterText)) == 0;
+
+		pattern = "([-]?\\d+(?:\\.\\d+)?):([-]?\\d+(?:\\.\\d+)?)";
+		if (filterText.matches(pattern)) {
+			String[] array = filterText.split(":");
+			BigDecimal min = new BigDecimal(array[0]);
+			BigDecimal max = new BigDecimal(array[1]);
+			return new BigDecimal(value.toString()).compareTo(min) >= 0
+					&& new BigDecimal(value.toString()).compareTo(max) <= 0;
+		}
+
+		pattern = "^<([-]?\\d+(?:\\.\\d+)?)$";
+		if (filterText.matches(pattern)) {
+			String texto = filterText.replace("<", "");
+			return ((Comparable) new BigDecimal(value.toString()))
+					.compareTo(new BigDecimal(texto)) < 0;
+		}
+
+		pattern = "^<=([-]?\\d+(?:\\.\\d+)?)$";
+		if (filterText.matches(pattern)) {
+			String texto = filterText.replace("<=", "");
+			return ((Comparable) new BigDecimal(value.toString()))
+					.compareTo(new BigDecimal(texto)) <= 0;
+		}
+
+		pattern = "^>=([-]?\\d+(?:\\.\\d+)?)$";
+		if (filterText.matches(pattern)) {
+			String texto = filterText.replace(">=", "");
+			return ((Comparable) new BigDecimal(value.toString()))
+					.compareTo(new BigDecimal(texto)) >= 0;
+		}
+		pattern = "^>([-]?\\d+(?:\\.\\d+)?)$";
+		if (filterText.matches(pattern)) {
+			String texto = filterText.replace(">", "");
+			return ((Comparable) new BigDecimal(value.toString()))
+					.compareTo(new BigDecimal(texto)) > 0;
+		}
+		
+		return value.toString().compareTo(filterText) == 0;
+
+	}
+    
+    
+    /*---------------------------------------SECCION PARA INVOCAR DIALOGO --------------*
+     /*
+     * @param record
+     * @param mes
+     */
+    public void invocarDialogo(ConsolidadoStockRealPivoteSf record, Integer mes) {
+
+        RequestContext context = RequestContext.getCurrentInstance();
+        this.itemStockSfDetalleBean.setCodigoItem(record.getConsolidadoStockRealPivoteSfPK().getItem());
+        this.itemStockSfDetalleBean.setDescripcionItem(record.getDescripcion());
+        this.itemStockSfDetalleBean.setAnio(this.anio);
+        this.itemStockSfDetalleBean.setMes(mes);
+        this.itemStockSfDetalleBean.getDetalleStockItem(record.getConsolidadoStockRealPivoteSfPK().getItem());
+
+        RequestContext.getCurrentInstance().update("itemStockSFDialogWidget");
+        RequestContext.getCurrentInstance().update("dtbVistaItemDetalleStockSf");
+
+        context.execute("PF('itemStockSFDialogWidget').show();");
+
+    }
+    
+    /*---------------------------------------FIN DE SECCION PARA INVOCAR DIALOGO --------------*
+    
+    
+    /**
+     * Seccion para repotes *
+     */
+    public void exportarPDF() {
+
+		rpt = new Reporte();
+		parametros = new HashMap<String, Object>();
+
+		parametros.put("inYear", this.anio);
+		
+
+		String path = "/reportes/consolidado_stock_sf.jasper";
+
+		try {
+			rpt.exportarPDF(parametros, path, "stock_consolidado"+this.anio);
+
+		} catch (JRException je) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+							.getMessage()));
+			je.printStackTrace();
+		} catch (IOException ie) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+							.getMessage()));
+			ie.printStackTrace();
+		} catch (NumberFormatException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+							"Debe de seleccionar un año"));
+		}
+
+	}// Fin del metodo exportarPDFEgreso
+
+	public void verPdf() {
+		rpt = new Reporte();
+		parametros = new HashMap<String, Object>();
+
+		parametros.put("inYear", this.anio);
+		
+
+		String path = "/reportes/consolidado_stock_sf.jasper";
+
+		try {
+			rpt.verPDF(parametros, path, "stock_consolidado"+this.anio);
+
+		} catch (JRException je) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+							.getMessage()));
+			je.printStackTrace();
+		} catch (IOException ie) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+							.getMessage()));
+			ie.printStackTrace();
+		} catch (NumberFormatException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+							"Debe de seleccionar un año"));
+		}
+
+	}//fin del metodo VerPdf
+    
+	
+	  public void exportarExcel(Object document) {
+			
+		  this.nombre_archivo="consolidado_stock_"+this.anio+"_"+this.mes;
+		  
+		     HSSFWorkbook wb = (HSSFWorkbook) document;
+			HSSFSheet sheet = wb.getSheetAt(0);
+			HSSFRow header = sheet.getRow(0);
+
+			HSSFCellStyle cellStyle = wb.createCellStyle();
+			cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+			cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+			for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
+				HSSFCell cell = header.getCell(i);
+
+				cell.setCellStyle(cellStyle);
+			}
+		}//fin de la funcion exportarExcel
+	  
+	  
+	  public void exportarStockAlCortePDF(){
+		    rpt = new Reporte();
+			parametros = new HashMap<String, Object>();
+			
+			if(this.dtblStockRealPivote!=null)
+			{
+				
+				parametros.put("inYear", this.anio);
+				
+
+				String path = "/reportes/rpt_alerta_stock_pdf.jasper";
+
+				try {
+					rpt.exportarPDF(parametros, path, "alerta_stock"+this.anio);
+
+				} catch (JRException je) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+									.getMessage()));
+					je.printStackTrace();
+				} catch (IOException ie) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+									.getMessage()));
+					ie.printStackTrace();
+				} catch (NumberFormatException e) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+									e.getMessage()));
+				}
+				
+			}
+			else
+			{
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+								"Debe de seleccionar un año"));
+				
+			}
+			
+			
+		  
+	  }
+	  
+	  public void verStockAlCortePdf(){
+		    rpt = new Reporte();
+			parametros = new HashMap<String, Object>();
+			
+			if(this.dtblStockRealPivote!=null)
+			{
+				
+				parametros.put("inYear", this.anio);
+				String path = "/reportes/rpt_alerta_stock_pdf.jasper";
+
+				
+				try {
+					
+					 byte[] reportPdf;
+					 reportPdf=rpt.pdfImprimirStream(parametros, path,"/reportes/rpt_alerta_stock_pdf.jrxml", "alerta_stock"+this.anio);
+					 
+					 if (reportPdf != null) {
+						InputStream fis = new ByteArrayInputStream(reportPdf);
+						this.PDFStream= new DefaultStreamedContent(fis, "application/pdf; charset=UTF-8", "probandoPdf.pdf");
+						RequestContext context = RequestContext.getCurrentInstance();
+					    RequestContext.getCurrentInstance().update("panelVisorPDF");
+						context.execute("PF('impresionReporteDialogWidget').show();");
+						
+						System.out.println("No es null");						 
+						
+					 }
+					 else{
+						 FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+											"Salio Null no puede ser"));
+						 
+						 
+					 }
+					 
+					 
+					
+					
+					/*
+					RequestContext context = RequestContext.getCurrentInstance();
+					context.execute("window.open('','blankPopUpStockAlCorte','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');");
+					*/
+					//linea 197 target="blankPopUpStockAlCorte"  template.xhtml  onclick="window.open('','blankPopUpStockAlCorte','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+					
+				} 
+				
+				/*
+				catch (JRException je) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+									.getMessage()));
+					je.printStackTrace();
+				} catch (IOException ie) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+									.getMessage()));
+					ie.printStackTrace();
+				} */
+				catch (NumberFormatException e) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+									e.getMessage()));
+				}catch (Exception e) {
+				
+					e.printStackTrace();
+					
+				}	
+				
+			}
+			else
+			{
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+								"Debe de seleccionar un año"));
+				
+				 RequestContext.getCurrentInstance().update("growl");
+				
+			}
+		  
+	  }
+	  
+	  public StreamedContent getStockAlCortePdf(){
+		    		rpt = new Reporte();
+					parametros = new HashMap<String, Object>();
+					
+					if(this.dtblStockRealPivote!=null)
+					{
+						parametros.put("inYear", this.anio);
+						
+
+						String path = "/reportes/rpt_alerta_stock_pdf.jasper";
+
+						try
+						{
+							return rpt.verPDFStream(parametros, path, "alerta_stock"+this.anio);
+							
+							
+						}
+						catch (JRException je) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+											.getMessage()));
+							je.printStackTrace();
+						} catch (IOException ie) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+											.getMessage()));
+							ie.printStackTrace();
+						} catch (NumberFormatException e) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+											e.getMessage()));
+						}
+						
+					}
+					else
+					{
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+										"Debe de seleccionar un año"));}
+					return null;
+						
+					}
+
+
+	  
+	  
+	  public void exportarStockAlCorteExcel(){
+		    rpt = new Reporte();
+			parametros = new HashMap<String, Object>();
+			
+			if(this.dtblStockRealPivote!=null)
+			{
+				parametros.put("inYear", this.anio);
+				
+				String path = "/reportes/rpt_alerta_stock_excel.jasper";
+
+				try {
+					rpt.exportarXLS(parametros, path, "alerta_stock"+this.anio);
+					
+					
+					
+				}
+				
+				
+				catch (JRException je) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", je
+									.getMessage()));
+					je.printStackTrace();
+				} catch (IOException ie) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", ie
+									.getMessage()));
+					ie.printStackTrace();
+				} catch (NumberFormatException e) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+									e.getMessage()));
+				}
+				
+			}
+			
+		  
+	  }
+	  
+	
+    /*--------------------- FIN DE LA SECCION PARA REPOTE ----------------  */
+   
+
+}

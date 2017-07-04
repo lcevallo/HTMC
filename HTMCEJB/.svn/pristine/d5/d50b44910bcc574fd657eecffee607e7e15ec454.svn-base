@@ -1,0 +1,281 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package Entities;
+
+import java.io.Serializable;
+import java.math.BigInteger;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author Bryan
+ */
+@Entity
+@Table(name = "vista_alerta_minimos")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "VistaAlertaMinimos.findAll", query = "SELECT v FROM VistaAlertaMinimos v"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByCuadroBase", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.cuadroBase = :cuadroBase"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByItem", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.item = :item"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByYear", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.year = :year"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByDescripcion", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.descripcion = :descripcion"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByBodega", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.bodega = :bodega"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByBodegaAndYear", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.bodega = :bodega and v.year = :year"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByEne", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.ene = :ene"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByFeb", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.feb = :feb"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByMar", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.mar = :mar"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByAbr", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.abr = :abr"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByMay", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.may = :may"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByJun", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.jun = :jun"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByJul", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.jul = :jul"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByAgo", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.ago = :ago"),
+    @NamedQuery(name = "VistaAlertaMinimos.findBySep", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.sep = :sep"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByOct", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.oct = :oct"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByNov", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.nov = :nov"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByDic", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.dic = :dic"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByMaximo", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.maximo = :maximo"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByMinimo", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.minimo = :minimo"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByPorcentajeMaximo", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.porcentajeMaximo = :porcentajeMaximo"),
+    @NamedQuery(name = "VistaAlertaMinimos.findByPorcentajeMinimo", query = "SELECT v FROM VistaAlertaMinimos v WHERE v.porcentajeMinimo = :porcentajeMinimo")})
+public class VistaAlertaMinimos implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Column(name = "fila")
+    private BigInteger fila;    
+    @Size(max = 75)
+    @Column(name = "cuadro_base")
+    private String cuadroBase;    
+    @Size(max = 2147483647)
+    @Column(name = "item")
+    private String item;
+    @Column(name = "year")
+    private Integer year;
+    @Size(max = 2147483647)
+    @Column(name = "descripcion")
+    private String descripcion;
+    @Column(name = "bodega")
+    private Integer bodega;
+    @Column(name = "ene")
+    private Integer ene;
+    @Column(name = "feb")
+    private Integer feb;
+    @Column(name = "mar")
+    private Integer mar;
+    @Column(name = "abr")
+    private Integer abr;
+    @Column(name = "may")
+    private Integer may;
+    @Column(name = "jun")
+    private Integer jun;
+    @Column(name = "jul")
+    private Integer jul;
+    @Column(name = "ago")
+    private Integer ago;
+    @Column(name = "sep")
+    private Integer sep;
+    @Column(name = "oct")
+    private Integer oct;
+    @Column(name = "nov")
+    private Integer nov;
+    @Column(name = "dic")
+    private Integer dic;
+    @Column(name = "maximo")
+    private Integer maximo;
+    @Column(name = "minimo")
+    private Integer minimo;
+    @Column(name = "porcentaje_maximo")
+    private BigInteger porcentajeMaximo;
+    @Column(name = "porcentaje_minimo")
+    private BigInteger porcentajeMinimo;
+
+    public VistaAlertaMinimos() {
+    }
+
+    public String getCuadroBase() {
+        return cuadroBase;
+    }
+
+    public void setCuadroBase(String cuadroBase) {
+        this.cuadroBase = cuadroBase;
+    }
+
+    public String getItem() {
+        return item;
+    }
+
+    public void setItem(String item) {
+        this.item = item;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Integer getBodega() {
+        return bodega;
+    }
+
+    public void setBodega(Integer bodega) {
+        this.bodega = bodega;
+    }
+
+    public Integer getEne() {
+        return ene;
+    }
+
+    public void setEne(Integer ene) {
+        this.ene = ene;
+    }
+
+    public Integer getFeb() {
+        return feb;
+    }
+
+    public void setFeb(Integer feb) {
+        this.feb = feb;
+    }
+
+    public Integer getMar() {
+        return mar;
+    }
+
+    public void setMar(Integer mar) {
+        this.mar = mar;
+    }
+
+    public Integer getAbr() {
+        return abr;
+    }
+
+    public void setAbr(Integer abr) {
+        this.abr = abr;
+    }
+
+    public Integer getMay() {
+        return may;
+    }
+
+    public void setMay(Integer may) {
+        this.may = may;
+    }
+
+    public Integer getJun() {
+        return jun;
+    }
+
+    public void setJun(Integer jun) {
+        this.jun = jun;
+    }
+
+    public Integer getJul() {
+        return jul;
+    }
+
+    public void setJul(Integer jul) {
+        this.jul = jul;
+    }
+
+    public Integer getAgo() {
+        return ago;
+    }
+
+    public void setAgo(Integer ago) {
+        this.ago = ago;
+    }
+
+    public Integer getSep() {
+        return sep;
+    }
+
+    public void setSep(Integer sep) {
+        this.sep = sep;
+    }
+
+    public Integer getOct() {
+        return oct;
+    }
+
+    public void setOct(Integer oct) {
+        this.oct = oct;
+    }
+
+    public Integer getNov() {
+        return nov;
+    }
+
+    public void setNov(Integer nov) {
+        this.nov = nov;
+    }
+
+    public Integer getDic() {
+        return dic;
+    }
+
+    public void setDic(Integer dic) {
+        this.dic = dic;
+    }
+
+    public Integer getMaximo() {
+        return maximo;
+    }
+
+    public void setMaximo(Integer maximo) {
+        this.maximo = maximo;
+    }
+
+    public Integer getMinimo() {
+        return minimo;
+    }
+
+    public void setMinimo(Integer minimo) {
+        this.minimo = minimo;
+    }
+
+    public BigInteger getPorcentajeMaximo() {
+        return porcentajeMaximo;
+    }
+
+    public void setPorcentajeMaximo(BigInteger porcentajeMaximo) {
+        this.porcentajeMaximo = porcentajeMaximo;
+    }
+
+    public BigInteger getPorcentajeMinimo() {
+        return porcentajeMinimo;
+    }
+
+    public void setPorcentajeMinimo(BigInteger porcentajeMinimo) {
+        this.porcentajeMinimo = porcentajeMinimo;
+    }
+
+	public Integer getFila() {
+		return fila;
+	}
+
+	public void setFila(Integer fila) {
+		this.fila = fila;
+	}
+    
+}

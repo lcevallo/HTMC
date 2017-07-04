@@ -1,0 +1,79 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package SessionBeans;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
+import javax.transaction.TransactionManager;
+
+import Entities.VistaIngresoMaximoMinimo;
+
+/**
+ *
+ * @author Bryan
+ */
+@Stateless
+public class VistaItemMaxMinFacade extends AbstractFacade<VistaIngresoMaximoMinimo> implements
+		VistaItemMaxMinFacadeLocal {
+	@PersistenceContext(unitName = "HTMC-ejbPU")
+	private EntityManager entityManager;
+	private TransactionManager transaction;
+
+	@Override
+	protected EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	public VistaItemMaxMinFacade() {
+		super(VistaIngresoMaximoMinimo.class);
+	}
+
+	@Override
+	public String guardarMaximo(String usuario, String item, Integer minimo) {
+		
+		
+		try {
+
+			StoredProcedureQuery storedProcedure = entityManager
+					.createStoredProcedureQuery(
+							"adm_ingresar_minimo"
+							);
+
+			storedProcedure.registerStoredProcedureParameter(1, String.class,
+					ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter(2, String.class,
+					ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter(3, Integer.class,
+					ParameterMode.IN);
+
+			storedProcedure.setParameter(1, usuario);
+			storedProcedure.setParameter(2, item);
+			storedProcedure.setParameter(3, minimo);
+
+			
+			storedProcedure.execute();
+			
+			return storedProcedure.getSingleResult().toString();
+
+			
+
+		
+
+		} catch (Exception exception) {
+			System.out.println(exception.getMessage());
+		}
+
+		return null;
+		
+		
+		
+	}
+
+}

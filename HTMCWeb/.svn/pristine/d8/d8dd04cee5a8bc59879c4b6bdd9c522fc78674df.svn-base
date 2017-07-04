@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+	<title>Alerta de Minimos x Bodega</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<h:outputStylesheet name="./css/default.css" />
+	<h:outputStylesheet name="./css/cssLayout.css" />
+
+</h:head>
+<h:body>
+
+	<h:form id="frmAlertaMaximoMinimoxBodega">
+		<p:growl id="msgsAlertaMaximoMinimoBodega" showDetail="true" />
+
+		<p:commandButton id="dynaButton" value="Imprimir" type="button"
+			icon="ui-icon-print" />
+		<p:menu overlay="true" trigger="dynaButton" my="left top"
+			at="left bottom">
+			<p:submenu label="Reporte en:">
+				<p:menuitem value="PDF" icon="ui-icon-image"
+					actionListener="#{alertaMinimoxBodegaBean.exportarPDF()}"
+					ajax="false" />
+
+				<p:menuitem icon="ui-icon-image" id="openPopUpAlertaMaxMinGlobal"
+					value="VISOR PDF"
+					actionListener="#{alertaMinimoxBodegaBean.verAlertaMaxMinGlobalPdf}"
+					ajax="true" update="msgsAlertaMaximoMinimoBodega">
+				</p:menuitem>
+
+				<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+			</p:submenu>
+		</p:menu>
+
+		<p:selectCheckboxMenu id="columnsIngresos" label="Columnas"
+			style="float:right;" filter="true"
+			value="#{alertaMinimoxBodegaBean.selectedColumnsAlertas}"
+			filterMatchMode="contains" panelStyle="width:272px">
+			<f:selectItems value="#{alertaMinimoxBodegaBean.columnsAlertas}" />
+
+			<p:ajax update=":#{p:component('dtbBodegaAlerta')}" />
+			<p:ajax event="toggleSelect"
+				update=":#{p:component('dtbBodegaAlerta')}" />
+
+
+		</p:selectCheckboxMenu>
+
+
+		<div align="center">
+			<ui:repeat value="#{alertaMinimoxBodegaBean.bodegas}" var="bodega">
+				<p:commandButton value="Bodega #{bodega.codigoBodega}"
+					style="height: 50px;"
+					action='#{alertaMinimoxBodegaBean.llenarDatatable(consolidadoBean.anio,consolidadoBean.mes, bodega.codigoBodega)}' />
+			</ui:repeat>
+		</div>
+
+		<p:dataTable id="dtbBodegaAlerta" var="recordBodegaAlerta"
+			value="#{alertaMinimoxBodegaBean.dtbBodegaAlerta}"
+			paginatorPosition="bottom" paginator="true" rows="10"
+			scrollable="true"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			emptyMessage="No existen datos para presentar">
+
+
+			<p:column style="width:14%;" headerText="CNMB">
+				<h:outputText value="#{recordBodegaAlerta.cuadroBase}" />
+			</p:column>
+
+			<p:column style="width:14%;" headerText="Ítem"
+				filterBy="#{recordBodegaAlerta.item}" filterMatchMode="contains">
+				<h:outputText value="#{recordBodegaAlerta.item}" />
+			</p:column>
+
+			<p:column headerText="Descripción"
+				filterBy="#{recordBodegaAlerta.descripcion}" style="width:23%;"
+				filterMatchMode="contains">
+				<h:outputText value="#{recordBodegaAlerta.descripcion}" />
+			</p:column>
+
+
+			<p:column headerText="Enero" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Enero')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,1)}">
+					<h:outputText value="#{recordBodegaAlerta.porcentajeMinimo}"
+						style="#{(recordBodegaAlerta.ene >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+			<p:column headerText="Febrero" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Febrero')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,2)}">
+					<h:outputText value="#{recordBodegaAlerta.feb}"
+						style="#{(recordBodegaAlerta.feb >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Marzo" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Marzo')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,3)}">
+					<h:outputText value="#{recordBodegaAlerta.mar}"
+						style="#{(recordBodegaAlerta.mar >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Abril" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Abril')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,4)}">
+					<h:outputText value="#{recordBodegaAlerta.abr}"
+						style="#{(recordBodegaAlerta.abr >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Mayo" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Mayo')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,5)}">
+					<h:outputText value="#{recordBodegaAlerta.may}"
+						style="#{(recordBodegaAlerta.may >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column headerText="Junio" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Junio')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,6)}">
+					<h:outputText value="#{recordBodegaAlerta.jun}"
+						style="#{(recordBodegaAlerta.jun >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column headerText="Julio" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Julio')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,7)}">
+					<h:outputText value="#{recordBodegaAlerta.jul}"
+						style="#{(recordBodegaAlerta.jul >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column headerText="Agosto" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Agosto')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,8)}">
+					<h:outputText value="#{recordBodegaAlerta.ago}"
+						style="#{(recordBodegaAlerta.ago >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Septiembre" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Septiembre')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,9)}">
+					<h:outputText value="#{recordBodegaAlerta.sep}"
+						style="#{(recordBodegaAlerta.sep >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Octubre" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Octubre')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,10)}">
+					<h:outputText value="#{recordBodegaAlerta.oct}"
+						style="#{(recordBodegaAlerta.oct >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Noviembre" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Noviembre')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,11)}">
+					<h:outputText value="#{recordBodegaAlerta.nov}"
+						style="#{(recordBodegaAlerta.nov >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Diciembre" styleClass="mes_alerta_mini"
+				rendered="#{alertaMinimoxBodegaBean.selectedColumnsAlertas.contains('Diciembre')}">
+				<p:commandLink
+					actionListener="#{alertaMinimoxBodegaBean.invocarDialogo(recordBodegaAlerta,12)}">
+					<h:outputText value="#{recordBodegaAlerta.dic}"
+						style="#{(recordBodegaAlerta.dic >=recordBodegaAlerta.porcentajeMinimo)  ? 'color: green;' : 'color:red;'}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+		</p:dataTable>
+
+
+	</h:form>
+
+</h:body>
+</html>
+

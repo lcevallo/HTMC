@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+<h:head>
+	<title>Inicio de sesión</title>
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/resources/css/style.css" />
+	<!-- <link rel="shortcut icon" type="image/x-icon"
+		href="#{request.contextPath}/resources/images/favicon.ico" />-->
+</h:head>
+<h:body>
+
+	<div class="container">
+		<section>
+			<div id="container_demo">
+				<div id="wrapper">
+					<div id="login" class="animate form">
+						<div class="center">
+							<img class="logoIESS" src="resources/images/logo_iess.png" />
+						</div>
+						<h:form id="formLogin" autocomplete="on">
+							<p:growl id="growl" showDetail="false" life="3000" />
+							<p>
+								<label for="userName" class="uname" data-icon="u">
+									Usuario </label>
+								<p:inputText id="userName" label="Usuario"
+									value="#{loginBean.user.usuario}" required="true" />
+							</p>
+							<p>
+								<label for="userPassword" class="youpasswd" data-icon="p">
+									Contraseña </label>
+								<p:password id="userPassword" label="Contraseña"
+									value="#{loginBean.user.clave}" required="true" />
+							</p>
+							<p class="button center">
+								<p:commandButton id="loginButton" action="#{loginBean.logIn}"
+									ajax="false" styleClass="password" value="Iniciar sesión"
+									update="#{p:component('formLogin')}, :growl"
+									style="font-size: 12px !important;" />
+							</p>
+							
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</h:body>
+
+</html>
+

@@ -1,0 +1,51 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package SessionBeans;
+
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import Entities.ConsolidadoAnualPivote;
+import Entities.ConsolidadoItemStockReal;
+
+/**
+ *
+ * @author lcevallos
+ */
+@Stateless
+public class ConsolidadoItemStockRealFacade extends AbstractFacade<ConsolidadoItemStockReal> implements ConsolidadoItemStockRealFacadeLocal {
+    @PersistenceContext(unitName = "HTMC-ejbPU")
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public ConsolidadoItemStockRealFacade() {
+        super(ConsolidadoItemStockReal.class);
+    }
+
+	@Override
+	public List<ConsolidadoItemStockReal> findAll(int year) {
+		
+		List<ConsolidadoItemStockReal> listado = null;
+		String query = "FROM ConsolidadoItemStockReal  E where E.id.year=:anio Order by E.id.itemFk ";
+
+		Query q = this.em.createQuery(query).setParameter("anio", year);
+
+		listado = q.getResultList();
+
+		return listado;
+	
+	}
+    
+}

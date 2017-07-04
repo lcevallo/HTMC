@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/resources/css/style.css" />
+	<h:outputStylesheet name="./css/default.css" />
+	<h:outputStylesheet name="./css/cssLayout.css" />
+	<title>Inventario</title>
+
+</h:head>
+
+
+<h:body>
+
+	<pe:importConstants className="Utility.Rol" var="Constants" />
+
+
+
+	<div class="ui-grid ui-grid-responsive">
+		<div class="ui-grid-row">
+			<div class="ui-grid-col-12">
+
+				<div class="loginStatusBar">
+					<h:form id="actionForm" styleClass="loginForm">
+
+
+						<div class="userInfoContainer">
+							<h:outputLabel
+								value="Usuario: #{(userInSession.nombre).concat(' ').concat(userInSession.apellido)}  " />
+							<h:outputLabel value="Rol: #{userInSession.rolActivo}" />
+						</div>
+
+						<div class="userInfoContainer">
+							<p:link id="administration" outcome="/administration/usuarios"
+								rendered="#{rolesInSession.contains(Constants.ADMINISTRADOR)}">
+								<p:graphicImage value="/resources/images/admin.png" width="30"
+									height="30" styleClass="barImage" />
+							</p:link>
+						</div>
+
+
+						<div class="userInfoContainer">
+							<p:commandLink id="changePassword"
+								onclick="PF('changePasswordDialog').show();">
+								<p:graphicImage value="/resources/images/change_password.png"
+									width="30" height="30" styleClass="barImage" />
+							</p:commandLink>
+						</div>
+
+						<div class="userInfoContainer">
+							<p:commandLink id="logOut" action="#{loginBean.logOut}"
+								process="@this">
+								<p:graphicImage value="/resources/images/exit.png" width="28"
+									height="28" styleClass="barImage" />
+							</p:commandLink>
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+
+
+		</div>
+
+
+		<div class="ui-grid-row">
+			<div class="ui-grid-col-12">
+				<div class="panelCentered">
+					<img src="#{request.contextPath}/resources/images/LOGO_HTMC.png"
+						style="max-width: 100%; height: auto;" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div id="left"></div>
+
+		<div id="content" class="left_content">
+			<h:form id="frmFiltro" style="width:100%;">
+				<p:growl id="growl" showDetail="true" sticky="true" life="3000" />
+
+				<table border="0px">
+					<tr>
+						<td><p:fieldset legend="Filtro de búsqueda" toggleable="true"
+								toggleSpeed="500"
+								style="position: relative;display: inline-block;">
+								<div style="position: absolute; top: 20px; right: 22px;">
+									<b>Fecha de corte:</b>
+									<h:outputText value=" #{consolidadoBean.fechaCorte}">
+
+										<f:convertDateTime pattern="yyyy-MM-dd" />
+
+									</h:outputText>
+								</div>
+								<br />
+								<h:panelGrid id="panelBusqueda" columns="8">
+									<p:selectOneMenu label="Año" id="cmbanio"
+										value="#{consolidadoBean.anio}"
+										valueChangeListener="#{consolidadoBean.fireSelectionAnio}"
+										required="true">
+										<p:ajax event="valueChange" process="@this" />
+										<f:selectItem itemLabel="Seleccione un año" itemValue="" />
+										<f:selectItem itemLabel="2015" itemValue="2015" />
+										<f:selectItem itemLabel="2014" itemValue="2014" />
+										<f:selectItem itemLabel="2013" itemValue="2013" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu label="Mes" id="cmbMeses"
+										value="#{consolidadoBean.mes}"
+										valueChangeListener="#{consolidadoBean.fireSelectionMes}"
+										required="true">
+										<p:ajax event="valueChange" process="@this" />
+										<f:selectItem itemLabel="Seleccione un mes" itemValue="" />
+										<f:selectItem itemLabel="Enero" itemValue="1" />
+										<f:selectItem itemLabel="Febrero" itemValue="2" />
+										<f:selectItem itemLabel="Marzo" itemValue="3" />
+										<f:selectItem itemLabel="Abril" itemValue="4" />
+										<f:selectItem itemLabel="Mayo" itemValue="5" />
+										<f:selectItem itemLabel="Junio" itemValue="6" />
+										<f:selectItem itemLabel="Julio" itemValue="7" />
+										<f:selectItem itemLabel="Agosto" itemValue="8" />
+										<f:selectItem itemLabel="Septiembre" itemValue="9" />
+										<f:selectItem itemLabel="Octubre" itemValue="10" />
+										<f:selectItem itemLabel="Noviembre" itemValue="11" />
+										<f:selectItem itemLabel="Diciembre" itemValue="12" />
+									</p:selectOneMenu>
+
+									<p:commandButton value="Buscar" ajax="true" process="@this"
+										actionListener="#{consolidadoBean.generarInformacionAnual()}"
+										update="@all" onstart="PF('blockUIWidget1').block()"
+										oncomplete="PF('blockUIWidget1').unblock()" />
+
+
+
+								</h:panelGrid>
+							</p:fieldset></td>
+						<td><p:graphicImage value="/resources/images/bodegas.png" />
+						</td>
+
+					</tr>
+				</table>
+
+
+				<p:menubar>
+
+			<p:submenu label="Reportes" icon="ui-icon-document">
+						<p:menuitem value="Excel General" ajax="false"
+							actionListener="#{consolidadoBean.exportarExcelGeneral}"
+							update="growl" />
+						<p:separator />
+
+					</p:submenu>
+					<p:menuitem value="Reporte Sub-Dirección" process="@this"
+						actionListener="#{consolidadoBean.abrirModalCorte}" />
+
+
+					<p:submenu label="Alerta Stock" icon="ui-icon-print" 
+						my="left top" at="left bottom" >
+						<p:menuitem value="PDF" icon="ui-icon-image"
+							actionListener="#{stockSFItemBean.exportarStockAlCortePDF}"
+							ajax="false" />
+						<p:menuitem icon="ui-icon-image"
+							 id="openPopUpStockAlCorte" value="VISOR PDF"								
+								actionListener="#{stockSFItemBean.verStockAlCortePdf}" 
+								ajax="true" >
+						</p:menuitem>
+						<p:menuitem value="EXCEL" icon="ui-icon-xls"
+							actionListener="#{stockSFItemBean.exportarStockAlCorteExcel}"
+							ajax="false">
+						</p:menuitem>
+					</p:submenu>
+
+				</p:menubar>
+
+
+				<p:idleMonitor timeout="900000" onidle="PF('idleDialog').show();" />
+
+				<p:confirmDialog id="confirmDialog" closable="false"
+					closeOnEscape="false"
+					message="Se ha detectado inactividad por al menos 15 minutos. 
+                            Debe iniciar sesión nuevamente para continuar."
+					header="¿Hay alguien ahí?" severity="alert" widgetVar="idleDialog">
+					<div style="text-align: center;">
+						<p:commandButton id="confirm" value="Ok"
+							oncomplete="PF('idleDialog').hide();window.location.reload();" />
+					</div>
+
+
+
+				</p:confirmDialog>
+
+			</h:form>
+
+
+
+			<ui:insert name="content">Content</ui:insert>
+		</div>
+	</div>
+	<div id="bottom">
+		<!--  <ui:insert name="bottom">Acerca de</ui:insert> -->
+	</div>
+	<ui:include src="/WEB-INF/dialogs/recordItemDialog.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/recordItemDialogStock.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/recordStockSfDialog.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/recordItemDialogCaducidad.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/opcionesImpresionCaducidadDialog.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/excel_corte_dialog.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/impresionDialogPdf.xhtml" />
+
+	<p:dialog id="changePasswordDialog" header="Cambiar contraseña"
+		widgetVar="changePasswordDialog" modal="true" height="275" width="350"
+		resizable="false" draggable="false">
+		<h:form id="data">
+			<center>
+
+				Contraseña actual <br />
+				<p:password id="actualPassword" required="true"
+					requiredMessage="Debe ingresar su contraseña actual"
+					label="Contraseña actual" value="#{usuarioBean.actualPassword}"></p:password>
+				<p:separator />
+				Nueva contraseña <br />
+				<p:password id="newPassword" required="true"
+					label="Nueva contraseña"
+					requiredMessage="Debe ingresar su nueva contraseña"
+					validatorMessage="La contraseña nueva debe coincidir con el campo de confirmación"
+					value="#{usuarioBean.newPassword}" match="matchNewPassword"></p:password>
+				<br /> Confirmar contraseña<br />
+				<p:password id="matchNewPassword" required="true"
+					requiredMessage="Debe ingresar su nueva contraseña"
+					label="Nueva contraseña" value="#{usuarioBean.newMatchPassword}"></p:password>
+				<p:separator />
+
+				<p:commandButton value="Cambiar contraseña"
+					action="#{usuarioBean.changePassword}" process="data" update="data"></p:commandButton>
+
+				<p:separator />
+
+				<p:messages id="messages"></p:messages>
+			</center>
+		</h:form>
+	</p:dialog>
+
+</h:body>
+
+</html>

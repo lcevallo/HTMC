@@ -1,0 +1,219 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+
+</h:head>
+<h:body>
+
+	<h:form id="frmConsolidadoEgreso">
+		
+
+		<p:commandButton id="dynaButtonEgreso" value="Imprimir" type="button"
+			icon="ui-icon-print" />
+		<p:menu overlay="true" trigger="dynaButtonEgreso" my="left top"
+			at="left bottom">
+			<p:submenu label="Reporte en:">
+				<p:menuitem value="PDF" icon="ui-icon-image"
+					actionListener="#{egresoBean.exportarPDFEgreso()}" ajax="false" />
+				<p:menuitem icon="ui-icon-image">
+					<h:commandLink id="openPopUpEgreso" value="VISOR PDF"
+						target="blankPopUp"
+						onclick="window.open('','blankPopUp','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+						actionListener="#{egresoBean.verPdf()}" ajax="false" />
+				</p:menuitem>
+
+				<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+			</p:submenu>
+		</p:menu>
+
+		<p:selectCheckboxMenu id="columnsEgresos" label="Columnas"
+			style="float:right;" filter="true"
+			value="#{consolidadoBean.selectedColumnsEgresos}"
+			filterMatchMode="contains" panelStyle="width:272px">
+			<f:selectItems value="#{consolidadoBean.columnsEgresos}" />
+
+			<p:ajax update=":#{p:component('dtbConsolidadoPivoteEgreso')}" />
+			<p:ajax event="toggleSelect"
+				update=":#{p:component('dtbConsolidadoPivoteEgreso')}" />
+
+
+		</p:selectCheckboxMenu>
+
+		<p:dataTable id="dtbConsolidadoPivoteEgreso" var="record"
+			value="#{consolidadoBean.listaConsolidadoAnualPivote}"
+			paginatorPosition="bottom" paginator="true" rows="10"
+			scrollable="true" frozenColumns="2"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			emptyMessage="No existen datos para presentar">
+
+
+			<f:facet name="header">
+                        Tabla Consolidado Egresos de Fármacos
+                    </f:facet>
+			
+			<p:column style="width:150px;" headerText="CNMB">
+				<h:outputText value="#{record.cuadroBase}" styleClass="enero"
+					style="width:150px;text-align:center" />
+			</p:column>
+			
+			<p:column style="width:150px;" headerText="Ítem"
+				filterBy="#{record.id.item}" filterMatchMode="contains">
+				<h:outputText value="#{record.id.item}" styleClass="enero"
+					style="width:150px;text-align:center" />
+			</p:column>
+
+			<p:column headerText="Descripción" filterBy="#{record.descripcion}"
+				filterMatchMode="contains">
+				<h:outputText value="#{record.descripcion}"
+					styleClass="descripcionItem" />
+			</p:column>
+
+			<p:column colspan="1" headerText="Stock Real" style="width:150px;">
+				<h:outputText value="#{record.stockReal}">
+					<f:convertNumber pattern="#,##0.00" />
+				</h:outputText>
+			</p:column>
+
+			<p:column styleClass="enero" headerText="Enero"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Enero')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,1,'E')}">
+					<h:outputText value="#{record.eneEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Febrero" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Febrero')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,2,'E')}">
+					<h:outputText value="#{record.febIngreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Marzo" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Marzo')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,3,'E')}">
+					<h:outputText value="#{record.marEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Abril" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Abril')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,4,'E')}">
+					<h:outputText value="#{record.abrEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Mayo" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Mayo')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,5,'E')}">
+					<h:outputText value="#{record.mayEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Junio" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Junio')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,6,'E')}">
+					<h:outputText value="#{record.junEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Julio" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Julio')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,7,'E')}">
+					<h:outputText value="#{record.julEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Agosto" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Agosto')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,8,'E')}">
+					<h:outputText value="#{record.agoEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column headerText="Septiembre"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Septiembre')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,9,'E')}">
+					<h:outputText value="#{record.sepEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column headerText="Octubre" style="width:150px;text-align:center"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Octubre')}">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,10,'E')}">
+					<h:outputText value="#{record.octEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Noviembre"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Noviembre')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,11,'E')}">
+					<h:outputText value="#{record.novEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Diciembre"
+				rendered="#{consolidadoBean.selectedColumnsEgresos.contains('Diciembre')}"
+				style="width:150px;text-align:center">
+				<p:commandLink
+					actionListener="#{itemDetalleBean.invocarDialogo(record,12,'E')}">
+					<h:outputText value="#{record.dicEgreso}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:commandLink>
+
+			</p:column>
+
+
+
+
+
+		</p:dataTable>
+
+
+	</h:form>
+</h:body>
+</html>

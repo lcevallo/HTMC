@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+
+<h:head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/resources/css/style.css" />
+	<h:outputStylesheet name="./css/default.css" />
+	<h:outputStylesheet name="./css/cssLayout.css" />
+
+	<title>Inventario</title>
+	<style type="text/css" media="all">
+.loginStatusBar {
+	background-repeat: repeat-x;
+	background-size: auto;
+	background-position: 0 0;
+	background-color: #3b5998;
+	border: 0;
+	border-bottom: 1px solid #133783;
+	-webkit-box-shadow: 0 4px 2px -2px rgba(0, 0, 0, .52);
+	position: relative;
+	color: white;
+	font-weight: bold;
+	width: 96%;
+	margin: 0px auto;
+	padding: 8px 10px 5px;
+	height: 35px;
+	-webkit-border-bottom-right-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-bottomright: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	-webkit-border-bottom-right-radius: 20px
+}
+
+.panelCentered {
+	margin: 10px auto;
+	text-align: center;
+}
+
+.loginForm {
+	float: right;
+	text-align: right;
+	width: auto;
+}
+
+.userInfoContainer {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.barImage {	
+	vertical-align: middle;
+}
+.infoLegend {
+position: relative;
+display: inline-block;
+float: right;
+width:50%;
+
+}
+</style>
+
+</h:head>
+
+
+<h:body>
+
+	<div id="top" style="display:none;">
+		<p:fieldset legend="" style="width: 20%; float: right;">
+
+
+			<ui:include src="/WEB-INF/dialogs/excel_corte_dialog.xhtml" />
+			<p:growl id="growl" showDetail="false" life="2000" />
+
+			<h:form id="loginStatusForm">
+
+
+				<h:outputLabel style="font-weight: bold;" value="Usuario: " />
+				<h:outputText
+					value="#{(userInSession.nombre).concat(' ').concat(userInSession.apellido)}" />
+
+				<p:commandLink id="logOut" process="@this"
+					action="#{loginBean.logOut}"
+					style="vertical-align: middle; float:right;">
+					<p:graphicImage value="/resources/images/exit.png" width="28px"
+						height="28px" style="vertical-align: middle;" />
+				</p:commandLink>
+				<br />
+				<h:outputLabel rendered="false"
+					style="font-weight: bold;width:53px; text-align:right;display:inline-block;"
+					value="Rol: Web Developer" />
+				<h:outputText value=" #{userDetails.size()}" />
+
+			</h:form>
+
+		</p:fieldset>
+
+		<img src="#{appBean.baseUrl}/resources/images/LOGO_HTMC.png" />
+
+		<h1>Sistema Control de Inventario de Fármacos</h1>
+
+	</div>
+	<div class="ui-grid ui-grid-responsive">
+		<div class="ui-grid-row">
+			<div class="ui-grid-col-12">
+
+				<div class="loginStatusBar">
+					<h:form id="actionForm" styleClass="loginForm">
+
+
+						<div class="userInfoContainer">
+							<h:outputLabel
+								value="Usuario: #{(userInSession.nombre).concat(' ').concat(userInSession.apellido)}  " />
+							<h:outputLabel value="Rol: #{userInSession.rolActivo}" />
+						</div>
+
+						<div class="userInfoContainer">
+							<p:commandLink id="changePassword" action="#{loginBean.logOut}"
+								process="@this">
+								<p:graphicImage value="/resources/images/change_password.png" width="30" height="30"
+									styleClass="barImage" />
+							</p:commandLink>
+						</div>
+
+						<div class="userInfoContainer">
+							<p:commandLink id="logOut" action="#{loginBean.logOut}"
+								process="@this">
+								<p:graphicImage value="/resources/images/exit.png" width="28" height="28"
+									styleClass="barImage" />
+							</p:commandLink>
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+
+
+		</div>
+
+
+		<div class="ui-grid-row">
+			<div class="ui-grid-col-12">
+				<div class="panelCentered">
+					<img src="#{request.contextPath}/resources/images/LOGO_HTMC.png"
+						style="max-width: 100%; height: auto;" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div id="left"></div>
+
+		<div id="content" class="left_content">
+			<h:form id="frmFiltro" style="width:100%;">
+				<p:growl id="growl" showDetail="true" sticky="true" life="3000" />
+
+				<table border="0px">
+					<tr>
+						<td><p:fieldset legend="Filtro de búsqueda" toggleable="true"
+								toggleSpeed="500"
+								style="position: relative;display: inline-block;">
+								<div style="position: absolute; top: 20px; right: 22px;">
+									<b>Fecha de corte:</b>
+									<h:outputText value=" #{consolidadoBean.fechaCorte}">
+
+										<f:convertDateTime pattern="yyyy-MM-dd" />
+
+									</h:outputText>
+								</div>
+								<br />
+								<h:panelGrid id="panelBusqueda" columns="8">
+									<p:selectOneMenu label="Año" id="cmbanio"
+										value="#{consolidadoBean.anio}"
+										valueChangeListener="#{consolidadoBean.fireSelectionAnio}"
+										required="true">
+										<p:ajax event="valueChange" process="@this" />
+										<f:selectItem itemLabel="Seleccione un año" itemValue="" />
+										<f:selectItem itemLabel="2015" itemValue="2015" />
+										<f:selectItem itemLabel="2014" itemValue="2014" />
+										<f:selectItem itemLabel="2013" itemValue="2013" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu label="Mes" id="cmbMeses"
+										value="#{consolidadoBean.mes}"
+										valueChangeListener="#{consolidadoBean.fireSelectionMes}"
+										required="true">
+										<p:ajax event="valueChange" process="@this" />
+										<f:selectItem itemLabel="Seleccione un mes" itemValue="" />
+										<f:selectItem itemLabel="Enero" itemValue="1" />
+										<f:selectItem itemLabel="Febrero" itemValue="2" />
+										<f:selectItem itemLabel="Marzo" itemValue="3" />
+										<f:selectItem itemLabel="Abril" itemValue="4" />
+										<f:selectItem itemLabel="Mayo" itemValue="5" />
+										<f:selectItem itemLabel="Junio" itemValue="6" />
+										<f:selectItem itemLabel="Julio" itemValue="7" />
+										<f:selectItem itemLabel="Agosto" itemValue="8" />
+										<f:selectItem itemLabel="Septiembre" itemValue="9" />
+										<f:selectItem itemLabel="Octubre" itemValue="10" />
+										<f:selectItem itemLabel="Noviembre" itemValue="11" />
+										<f:selectItem itemLabel="Diciembre" itemValue="12" />
+									</p:selectOneMenu>
+
+									<p:commandButton value="Buscar" ajax="true" process="@this"
+										actionListener="#{consolidadoBean.generarInformacionAnual()}"
+										update="@all" onstart="PF('blockUIWidget1').block()"
+										oncomplete="PF('blockUIWidget1').unblock()" />
+
+
+									<p:selectOneMenu id="cmbPercentil"
+										value="#{consolidadoBean.percentil}"
+										valueChangeListener="#{consolidadoBean.fireSelectionPercentil}"
+										rendered="false">
+										<p:ajax event="valueChange" immediate="true" process="@this" />
+										<f:selectItem itemLabel="Seleccione un percentil" itemValue="" />
+										<f:selectItem itemLabel="25%" itemValue="0.25" />
+										<f:selectItem itemLabel="50%" itemValue="0.50" />
+										<f:selectItem itemLabel="75%" itemValue="0.75" />
+										<f:selectItem itemLabel="100%" itemValue="1.00" />
+									</p:selectOneMenu>
+
+
+								</h:panelGrid>
+							</p:fieldset></td>
+						<td><p:graphicImage value="/resources/images/bodegas.png" />
+
+						</td>
+						<td>
+							<div style="float: right;">
+								<p:commandButton value="EXCEL General" ajax="false"
+									actionListener="#{consolidadoBean.exportarExcelGeneral}"
+									update="growl" />
+								<br />
+								<p:commandButton value="Reporte Sub-Dirección" process="@this"
+									actionListener="#{consolidadoBean.abrirModalCorte}" />
+
+								<br /> <br />
+								<p:commandButton id="dynaButtonStockExcelCorte"
+									value="Alerta Stock" type="button" icon="ui-icon-print" />
+								<p:menu overlay="true" trigger="dynaButtonStockExcelCorte"
+									my="left top" at="left bottom">
+									<p:submenu label="Stock 0:">
+										<p:menuitem value="PDF" icon="ui-icon-image"
+											actionListener="#{stockSFItemBean.exportarStockAlCortePDF}"
+											ajax="false" />
+										<p:menuitem icon="ui-icon-image">
+											<h:commandLink id="openPopUpStockAlCorte" value="VISOR PDF"
+												target="blankPopUpStockAlCorte"
+												onclick="window.open('','blankPopUpStockAlCorte','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+												actionListener="#{stockSFItemBean.verStockAlCortePdf}"
+												ajax="false" />
+										</p:menuitem>
+										<p:menuitem value="EXCEL" icon="ui-icon-xls"
+											actionListener="#{stockSFItemBean.exportarStockAlCorteExcel}"
+											ajax="false">
+										</p:menuitem>
+									</p:submenu>
+								</p:menu>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+
+				<p:idleMonitor timeout="900000" onidle="PF('idleDialog').show();" />
+
+				<p:confirmDialog id="confirmDialog" closable="false"
+					closeOnEscape="false"
+					message="Se ha detectado inactividad por al menos 15 minutos. 
+                            Debe iniciar sesión nuevamente para continuar."
+					header="¿Hay alguien ahí?" severity="alert" widgetVar="idleDialog">
+					<div style="text-align: center;">
+						<p:commandButton id="confirm" value="Ok"
+							oncomplete="PF('idleDialog').hide();window.location.reload();" />
+					</div>
+
+
+
+				</p:confirmDialog>
+
+			</h:form>
+
+
+
+			<ui:insert name="content">Content</ui:insert>
+		</div>
+	</div>
+	<div id="bottom">
+		<!--  <ui:insert name="bottom">Acerca de</ui:insert> -->
+	</div>
+	<ui:include src="/WEB-INF/dialogs/recordItemDialog.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/recordItemDialogStock.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/recordStockSfDialog.xhtml" />
+	<ui:include src="/WEB-INF/dialogs/recordItemDialogCaducidad.xhtml" />
+	<ui:include
+		src="/WEB-INF/dialogs/opcionesImpresionCaducidadDialog.xhtml" />
+
+</h:body>
+
+</html>

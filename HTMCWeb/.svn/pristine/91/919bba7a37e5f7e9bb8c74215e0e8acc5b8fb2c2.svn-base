@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<title>Accion</title>
+</h:head>
+<h:body>
+	<h:form id="frmAccion">
+		
+
+
+
+
+		<p:panelGrid columns="3">
+			<h:outputLabel for="cantidadMeses"
+				value="Ingrese la cantidad de Meses para el pedido" />
+			<p:inputText id="cantidadMeses"
+				value="#{consolidadoBean.cantidadMeses}"
+				label="Ingrese la cantidad de Meses para el pedido" />
+			<p:commandButton value="Generar"
+				actionListener="#{consolidadoBean.generarAccion}" ajax="true" />
+		</p:panelGrid>
+
+		<p:commandButton id="dynaButtonAccion" value="Imprimir" type="button"
+			icon="ui-icon-print" />
+		<p:menu overlay="true" trigger="dynaButtonAccion" my="left top"
+			at="left bottom">
+			<p:submenu label="Reporte en:">
+				<p:menuitem value="PDF" icon="ui-icon-image" ajax="false" />
+				<p:menuitem value="VISOR PDF" icon="ui-icon-image" ajax="false" />
+				<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+			</p:submenu>
+		</p:menu>
+		<p:panelGrid columns="1">
+			<p:dataTable id="dtbAccion" var="record" paginatorPosition="bottom"
+				paginator="true" rows="10"
+				emptyMessage="No existen datos para presentar">
+
+				<f:facet name="header">
+                        Tabla Duración de los Farmacos
+                    </f:facet>
+
+				<p:column headerText="Ítem" filterBy="#{record.id.item}"
+					filterMatchMode="contains">
+					<h:outputText />
+				</p:column>
+				<p:column rowspan="3" headerText="Descripción"
+					filterBy="#{record.id.item}" filterMatchMode="contains">
+					<h:outputText />
+				</p:column>
+				<p:column rowspan="3" headerText="Acción">
+					<h:outputText />
+				</p:column>
+
+				<p:column rowspan="3" headerText="Pedido">
+					<h:outputText />
+				</p:column>
+			</p:dataTable>
+		</p:panelGrid>
+
+	</h:form>
+</h:body>
+</html>
+

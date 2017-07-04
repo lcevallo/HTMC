@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+
+<h:head>
+
+	<style>
+.fechaTexto {
+	clear: both;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left;
+}
+</style>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dialog header="Informacion de Calculo del Stock del Item"
+			modal="true" showEffect="fade" hideEffect="fade"
+			widgetVar="itemStockSFDialogWidget" width="40%" position="top"
+			appendToBody="false" draggable="false" resizable="true"
+			id="itemStockSFDialogWidget">
+
+			<h:form id="formRecordItemStockSf">
+
+				<p:commandButton id="dynaButtonRecordItemStockSF" value="Imprimir"
+					type="button" icon="ui-icon-print" />
+				<p:menu overlay="true" trigger="dynaButtonRecordItemStockSF"
+					my="left top" at="left bottom">
+					<p:submenu label="Reporte en:">
+						<p:menuitem value="PDF" icon="ui-icon-image"
+							actionListener="#{itemStockSfDetalleBean.exportarPDF()}"
+							ajax="false" />
+						<p:menuitem icon="ui-icon-image">
+							<h:commandLink id="openPopUpDialogItem" value="VISOR PDF"
+								target="blankPopUpDialogStockItem"
+								onclick="window.open('', 'blankPopUpDialogStockItem', 'status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+								actionListener="#{itemStockSfDetalleBean.verPdf()}" ajax="false" />
+						</p:menuitem>
+						<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+					</p:submenu>
+				</p:menu>
+				<p:dataTable id="dtbVistaItemDetalleStockSf" 
+					value="#{itemStockSfDetalleBean.dtbVistaItemDetalleStockSf}"
+					var="itemRecordStockDetalleSf" paginatorPosition="bottom"
+					paginator="true" rows="8" 
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					emptyMessage="No existen datos para presentar">
+					
+					<f:facet name="header">
+						<h:outputLabel for="itemCodeSF" value="Item:" />
+						<h:outputText id="itemCodeSF"
+							value="#{itemStockSfDetalleBean.codigoItem}" />
+						<br />
+						<h:outputLabel for="itemDescripcionSF" value="Descripcion:" />
+						<h:outputText id="itemDescripcionSF"
+							value="#{itemStockSfDetalleBean.descripcionItem}" />
+						<br />
+						<h:outputLabel for="itemSFAnio" value="Año:" />
+						<h:outputText id="itemSFAnio"
+							value="#{itemStockSfDetalleBean.anio}" />
+					</f:facet>
+
+					<p:column  headerText="Mes">
+						<h:outputText value="#{itemRecordStockDetalleSf.mes}" />
+					</p:column>
+
+					<p:column 
+						headerText="Saldo Mes anterior (S.M.A)"
+						sortBy="#{itemRecordStockDetalleSf.saldoMesAnterior}">
+						<h:outputText value="#{itemRecordStockDetalleSf.saldoMesAnterior}">
+							<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+
+
+					<p:column  headerText="Ingreso"
+						sortBy="#{itemRecordStockDetalleSf.ingreso}">
+						<h:outputText value="#{itemRecordStockDetalleSf.ingreso}">
+							<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+                                    
+                                      <p:column  headerText="Ajuste de Ingreso"
+                                                 sortBy="#{itemRecordStockDetalleSf.ajusteIngreso}">
+						<h:outputText value="#{itemRecordStockDetalleSf.ajusteIngreso}">
+							<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+                                        
+					<p:column  headerText="Egreso"
+						sortBy="#{itemRecordStockDetalleSf.egreso}">
+						<h:outputText value="#{itemRecordStockDetalleSf.egreso}">
+							<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+
+					<p:column  headerText="Saldo Mes (S.M.A+I-E)"
+						sortBy="#{itemRecordStockDetalleSf.saldoMes}">
+						<h:outputText value="#{itemRecordStockDetalleSf.saldoMes}">
+							<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:form>
+
+
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>
+

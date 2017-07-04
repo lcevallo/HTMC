@@ -1,0 +1,150 @@
+<ui:composition template="/template.xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:define name="content">
+
+		<style>
+.ui-selectonemenu .ui-selectonemenu-label {
+	width: 248px !important;
+}
+
+.ui-selectonemenu {
+	width: 256px !important;
+}
+
+.ui-panel .ui-panel-content {
+	padding: 0em;
+}
+
+.rowContainer {
+	display: block;
+	width: 100%;
+	margin: 0px auto;
+	text-align: center;
+}
+
+.centerPanel {
+	margin: 0px auto;
+}
+
+.deleteUserButton {
+	width: auto !important;
+}
+
+table {
+	table-layout: fixed;
+}
+
+table td {
+	text-align: center;
+	word-wrap: break-word;
+}
+
+table input {
+	width: 90% !important;
+}
+
+.rowContainer input {
+	width: auto;
+}
+
+.labelForm {
+	text-align: right;
+	width: 150px;
+	display: inline-block;
+}
+
+.valueForm {
+	margin-left: 4px;
+	display: inline-block;
+}
+
+.buttonForm {
+	width: 204px;
+}
+
+.permisosPanel td {
+	text-align: left;
+}
+
+.permisosPanel {
+	margin: auto;
+}
+</style>
+
+
+		<h:form id="form">
+
+			<p:growl id="growl" life="3000" showDetail="false" />
+
+			<div class="ui-grid ui-grid-responsive">
+				<div class="ui-grid-row">
+					<div class="ui-grid-col-6">
+						<p:panel id="panelRol" header="Roles">
+
+							<p:dataTable id="tablaRoles" var="record"
+								value="#{rolPermisoBean.roles}" paginator="true"
+								paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{currentPage} de {totalPages}"
+								rowsPerPageTemplate="5,10,15" widgetVar="tablaRoles"
+								filteredValue="#{rolPermisoBean.rolesFiltered}" rows="10"
+								emptyMessage="No existen datos para presentar">
+
+								<p:column filterBy="#{record.tipoUsuario}"
+									sortBy="#{record.tipoUsuario}" filterMatchMode="contains"
+									headerText="Rol">
+									<h:outputText id="tipoUsuarioOutput"
+										value="#{record.tipoUsuario}" />
+
+								</p:column>
+
+								<p:column>
+									<p:commandButton
+										action="#{rolPermisoBean.buscarPermisos(record)}"
+										update=":form:panelPermiso" icon="ui-icon-circle-arrow-e" />
+								</p:column>
+
+
+
+							</p:dataTable>
+
+
+
+						</p:panel>
+					</div>
+					<div class="ui-grid-col-6">
+						<p:panel id="panelPermiso" header="Permisos">
+							<br />
+
+							<p:selectManyCheckbox id="permisosSMCB" layout="grid" columns="1"
+								styleClass="permisosPanel"
+								value="#{rolPermisoBean.permisosSelected}"
+								converter="#{permisoBean}">
+								<f:selectItems value="#{rolPermisoBean.permisos}" var="item"
+									itemLabel="#{item.permiso}" itemValue="#{item}" />
+							</p:selectManyCheckbox>
+							<br />
+							<div class="center">
+
+								<p:commandButton value="Guardar" id="guardarPermisosButton"
+									update="form" action="#{rolPermisoBean.guardar}"
+									icon="ui-icon-disk" />
+							</div>
+						</p:panel>
+					</div>
+				</div>
+			</div>
+
+			<br />
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

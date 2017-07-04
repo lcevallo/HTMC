@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<p:dialog header="Visor PDF" modal="true" showEffect="fade"
+		hideEffect="fade" widgetVar="impresionReporteDialogWidget"
+		height="90%" width="60%" position="top" appendToBody="false"
+		draggable="false" resizable="true" id="impresionReporteDialogWidget">
+
+
+		<p:media id="mediaPdf" width="100%" height="700px"
+			value="/pdf?archivo=rpt_alerta_stock_pdf.jasper&amp;inYear=#{consolidadoBean.anio}"
+			player="pdf" rendered="#{stockSFItemBean.dialogRendered}" />
+
+	</p:dialog>
+</ui:composition>

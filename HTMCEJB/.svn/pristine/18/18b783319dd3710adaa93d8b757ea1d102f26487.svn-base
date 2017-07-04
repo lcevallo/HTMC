@@ -1,0 +1,56 @@
+package Entities;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+/**
+ * The primary key class for the consolidado_item_stock_real database table.
+ * 
+ */
+@Embeddable
+public class ConsolidadoItemStockRealPK implements Serializable {
+	//default serial version id, required for serializable classes.
+	private static final long serialVersionUID = 1L;
+
+	@Column(name="item_fk")
+	private String itemFk;
+
+	private Integer year;
+
+	public ConsolidadoItemStockRealPK() {
+	}
+	public String getItemFk() {
+		return this.itemFk;
+	}
+	public void setItemFk(String itemFk) {
+		this.itemFk = itemFk;
+	}
+	public Integer getYear() {
+		return this.year;
+	}
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof ConsolidadoItemStockRealPK)) {
+			return false;
+		}
+		ConsolidadoItemStockRealPK castOther = (ConsolidadoItemStockRealPK)other;
+		return 
+			this.itemFk.equals(castOther.itemFk)
+			&& this.year.equals(castOther.year);
+	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int hash = 17;
+		hash = hash * prime + this.itemFk.hashCode();
+		hash = hash * prime + this.year.hashCode();
+		
+		return hash;
+	}
+}

@@ -1,0 +1,212 @@
+<ui:composition template="/template.xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:define name="content">
+
+		<style>
+.ui-selectonemenu .ui-selectonemenu-label {
+	width: 90% !important;
+}
+
+.ui-selectonemenu {
+	width: 90% !important;
+}
+
+.ui-panel .ui-panel-content {
+	padding: 0em;
+}
+
+.rowContainer {
+	display: block;
+	width: 100%;
+	margin: 0px auto;
+	text-align: center;
+}
+
+.center {
+	margin: 0px auto;
+}
+
+.deleteUserButton {
+	width: auto !important;
+}
+
+table {
+	table-layout: fixed;
+}
+
+table td {
+	text-align: center;
+	word-wrap: break-word;
+}
+
+table input {
+	width: 90% !important;
+}
+
+.rowContainer input {
+	width: auto;
+}
+
+.labelForm {
+	text-align: right;
+	width: 150px;
+	display: inline-block;
+}
+
+.valueForm {
+	margin-left: 4px;
+	display: inline-block;
+}
+
+.buttonForm {
+	width: 178px;
+}
+</style>
+		<script>
+			function focusForm() {
+				document.getElementById("form:panel").scrollIntoView();
+
+			}
+		</script>
+
+		<h:form id="form">
+
+			<p:growl id="growl" life="3000" showDetail="false" />
+
+
+			<p:panel id="panel" header="Administración de roles">
+
+				<p:outputPanel id="rolSelected" layout="block">
+					<br />
+					<label class="labelForm">Rol:</label>
+					<p:inputText id="tipoUsuarioInput" label="Rol"
+						styleClass="valueForm" value="#{rolBean.rol.nombreRol}"
+						required="true" readonly="#{rolBean.editMode}" />
+					<br />
+					<label class="labelForm">Página inicial:</label>
+					<p:inputText id="startPageInput" label="Página inicial"
+						styleClass="valueForm" value="#{rolBean.rol.startPage}"
+						required="false" />
+					<br />
+					<label class="labelForm">Descripción:</label>
+					<p:inputText id="descriptionInput" label="Descripción"
+						styleClass="valueForm" value="#{rolBean.rol.description}"
+						required="false" />
+
+					<br />
+					<br />
+					<label class="labelForm"></label>
+					<p:commandButton id="addRol" action="#{rolBean.addRol}"
+						styleClass="valueForm buttonForm"
+						value="#{rolBean.editMode ? 'Editar rol':'Añadir rol'}"
+						update="form" process="rolSelected"
+						icon="#{rolBean.editMode ?'ui-icon-pencil':'ui-icon-circle-plus'} " />
+
+				</p:outputPanel>
+
+				<br />
+
+				<p:dataTable id="tablaRoles" var="record" scrollable="true" scrollWidth="100%"
+					value="#{rolBean.roles}" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{totalRecords} Roles"
+					rowsPerPageTemplate="5,10,15" widgetVar="tablaUsuarios"
+					filteredValue="#{rolBean.rolesFiltered}" rows="10"
+					emptyMessage="No existen datos para presentar">
+
+
+					<p:column filterBy="#{record.nombreRol}"
+						sortBy="#{record.nombreRol}" style="width: 120px;"
+						filterMatchMode="contains" headerText="Rol">
+
+
+
+						<h:outputText id="tipoUsuarioOutput" value="#{record.nombreRol}" />
+
+
+					</p:column>
+
+					<p:column filterBy="#{record.startPage}"
+						sortBy="#{record.startPage}" style="width: 120px;"
+						filterMatchMode="contains" headerText="Página inicial">
+
+
+						<h:outputText id="startPageOutput" value="#{record.startPage}" />
+
+
+					</p:column>
+
+					<p:column filterBy="#{record.description}"
+						sortBy="#{record.description}" style="width: 120px;"
+						filterMatchMode="contains" headerText="Descripción">
+
+
+
+						<h:outputText id="descriptionOutput" value="#{record.description}" />
+
+
+					</p:column>
+
+
+					<p:column filterBy="#{record.idPadre}" sortBy="#{record.idPadre}"
+						style="width: 120px;" filterMatchMode="contains"
+						headerText="Rol superior inmediato">
+
+
+						<h:outputText id="rolPadreOutput" label="Rol superior inmediato"
+							value="#{record.idPadre}" />
+
+
+
+					</p:column>
+
+					<p:column style="width:24px">
+
+						<p:commandButton id="editButton" update=":form:rolSelected"
+							onclick="focusForm()" action="#{rolBean.editRow(record)}"
+							process="@this" icon="ui-icon-pencil" title="Editar">
+						</p:commandButton>
+
+					</p:column>
+
+
+
+				</p:dataTable>
+
+
+			</p:panel>
+
+			<br />
+
+			<p:panel id="rolesHierarchyPanel" header="Jerarquía de roles">
+				<br />
+				<p:tree id="rolesTree" value="#{rolBean.root}" var="node"
+					animate="true" draggable="true" droppable="true"
+					dragdropScope="rolesTreeScope" selectionMode="single"
+					selection="#{rolBean.selectedNode}">
+					<p:ajax event="dragdrop" listener="#{rolBean.onDragDrop}"
+						update=":form:growl, :form:tablaRoles" />
+
+					<p:treeNode id="treeNode">
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+				</p:tree>
+				<br />
+
+			</p:panel>
+
+			<br />
+
+
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

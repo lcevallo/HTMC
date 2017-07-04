@@ -1,0 +1,112 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ManagedBeans;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import Entities.Option;
+import Entities.Rol;
+import SessionBeans.OptionFacadeLocal;
+import SessionBeans.RolFacadeLocal;
+
+/**
+ *
+ * @author BryanV
+ */
+@ManagedBean
+@ViewScoped
+public class RolPermisoBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private Rol rol;
+	private Option permiso;
+
+	@EJB
+	private RolFacadeLocal tipoUsuarioFacadeLocal;
+
+	@EJB
+	private OptionFacadeLocal permisoFacadeLocal;
+
+	private List<Rol> roles;
+	private List<Rol> rolesFiltered;
+
+	private Set<Option> permisos;
+	private Set<Option> permisosFiltered;
+
+	private Set<Option> permisosSelected;
+
+	private boolean rolSelected;
+
+	public RolPermisoBean() {
+
+	}
+
+	@PostConstruct
+	public void inicio() {
+
+		rol = new Rol();
+		permiso = new Option();
+
+		roles = tipoUsuarioFacadeLocal.findAll();
+		permisos = new HashSet<>();
+		permisos.addAll(permisoFacadeLocal.findAll());
+
+	}
+
+	public void buscarPermisos(Rol tipoUsuario) {
+
+		try {
+
+			permisosSelected = new HashSet<>();
+
+			this.rol = (Rol) tipoUsuarioFacadeLocal
+					.fetchPermisosByRol(tipoUsuario.getTipoUsuario());
+
+			if (this.rol != null) {
+
+				permisosSelected.addAll(this.rol.getPermisos());
+			}
+
+			this.rol = tipoUsuario;
+			setRolSelected(true);
+
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+
+	}
+
+	public void guardar() {
+
+		if (rolSelected) {
+
+			this.rol.setPermisos(permisosSelected);
+
+			try {
+				tipoUsuarioFacadeLocal.edit(this.rol);
+			} catch (Exception exception) {
+				System.out.println(exception.getMessage());
+			}
+		}
+
+		setRolSelected(false);
+		permisosSelected = new HashSet<>();
+		rol = new TipoUsuario();
+
+	}
+
+	
+
+}

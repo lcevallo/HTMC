@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>No está autorizado</title>
+</h:head>
+<h:body style="text-align: center;">
+	<h1>Acceso denegado!</h1>
+
+	<img src="#{request.contextPath}/resources/images/exclamation.jpg"
+		style="width: 266px;" />
+	<br />No tiene permisos para ver esta
+		página! <br />
+	<h2>
+		<!-- <a href="#{request.contextPath}"> Regrese a la página de inicio! </a>-->
+		<a href="javascript:history.back()"> Regrese a la página anterior!
+		</a>
+	</h2>
+</h:body>
+</html>

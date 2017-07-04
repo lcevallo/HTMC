@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+
+	<style>
+.fechaTexto {
+	clear: both;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left;
+}
+</style>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dialog header="Informacion del Ítem" modal="true" showEffect="fade"
+			hideEffect="fade" widgetVar="itemDialogWidget" width="40%"
+			position="top" appendToBody="false" draggable="false"
+			resizable="true" id="itemDialog">
+			<h:form id="formRecordItem">
+
+
+
+				<p:commandButton id="dynaButtonRecordItem" value="Imprimir"
+					type="button" icon="ui-icon-print" />
+				<p:menu overlay="true" trigger="dynaButtonRecordItem" my="left top"
+					at="left bottom">
+					<p:submenu label="Reporte en:">
+						<p:menuitem value="PDF" icon="ui-icon-image"
+							actionListener="#{itemDetalleBean.exportarPDF}" ajax="false" />
+						<p:menuitem icon="ui-icon-image">
+							<h:commandLink id="openPopUpItemDetalle" value="VISOR PDF"
+								target="openPopUpItemDetalle"
+								onclick="window.open('','openPopUpItemDetalle','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+								actionListener="#{itemDetalleBean.verPdf}" ajax="false" />
+						</p:menuitem>
+
+						<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+					</p:submenu>
+				</p:menu>
+
+
+			</h:form>
+
+			<p:dataTable id="itemDetalleTbl" var="itemrecord"
+				value="#{itemDetalleBean.listSpDetalleItem}" paginatorPosition="top"
+				paginator="true" rows="6">
+				<f:facet name="header">
+                        Lista Detallada del item:  <h:outputLabel
+						value="#{itemDetalleBean.itemFk}" />
+					<br />
+					<h3>#{itemDetalleBean.descripcion}</h3>
+				</f:facet>
+
+				<p:column headerText="Bod" style="width:10px">
+					<h:outputText value="#{itemrecord.bodega}" />
+				</p:column>
+
+				<p:column headerText="Cant" style="width:10px">
+					<h:outputText value="#{itemrecord.cantidad}" />
+				</p:column>
+
+				<p:column headerText="Fecha" style="width:50px">
+					<h:outputText styleClass="fechaTexto" value="#{itemrecord.fecha}" />
+				</p:column>
+
+				<p:column headerText="Orden Medica" style="width:30px">
+					<h:outputText value="#{itemrecord.ordenMedica}" />
+				</p:column>
+
+				<f:facet name="footer">
+                        Cantidad Total en el Mes: #{itemDetalleBean.valueCantidadTotal}
+                        
+                    </f:facet>
+
+			</p:dataTable>
+
+
+
+		</p:dialog>
+
+	</ui:composition>
+
+</h:body>
+</html>
+

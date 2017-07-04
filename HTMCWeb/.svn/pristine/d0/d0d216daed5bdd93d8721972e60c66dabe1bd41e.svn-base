@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	template="../WEB-INF/templates/main.xhtml">
+
+
+	<ui:define name="left">
+        left
+    </ui:define>
+
+	<ui:define name="content">
+	<p:menubar>
+		<p:menuitem value="Inicio" url="../pages/inicio.jsf"
+			icon="ui-icon-home" />		
+	</p:menubar>
+	
+	
+	<h:form id="formItemMinMax">
+<p:growl id="growlMaxMin" showDetail="false" life="3000" />
+		<p:dataTable id="dtbItemsMaxMin" editable="true" widgetVar="dtbItemsMaxMin"
+			value="#{maxMinBean.listaMedicamento}" var="itemsMaximosMinimos"
+			paginatorPosition="bottom" paginator="true" rows="25"			
+			filteredValue="#{maxMinBean.filteredListaMedicamento}"
+			scrollable="true" 
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			emptyMessage="No existen datos para presentar">
+
+			<p:ajax event="rowEdit" listener="#{maxMinBean.onEdit}" update=":formItemMinMax:growlMaxMin"  />
+			<p:ajax event="rowEditCancel" listener="#{maxMinBean.onCancel}" update=":formItemMinMax:growlMaxMin"  />
+			
+			
+			<p:column headerText="No" style="width:3%">				
+				<h:outputText value="#{itemsMaximosMinimos.registro}"  />
+			</p:column>
+			
+			
+
+			<p:column headerText="Item" style="width:8%"
+				filterBy="#{itemsMaximosMinimos.codigoItem}"
+				filterMatchMode="contains">
+				<h:outputText value="#{itemsMaximosMinimos.codigoItem}" />
+			</p:column>
+
+
+			<p:column headerText="Descripcion" style="width:35%"
+				filterBy="#{itemsMaximosMinimos.descripcion}"
+				filterMatchMode="contains">
+				<h:outputText value="#{itemsMaximosMinimos.descripcion}" />
+			</p:column>
+	
+			<p:column headerText="Minimo">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{itemsMaximosMinimos.minimo}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{itemsMaximosMinimos.minimo}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+
+			<p:column id="fecha" headerText="Fecha de activación">
+				<h:outputText
+					value=" #{(itemsMaximosMinimos.fechaInicial eq null) ?  maxMinBean.fecha_actual : itemsMaximosMinimos.fechaInicial} ">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+				</h:outputText>
+
+			</p:column>
+
+			<p:column style="width:6%">
+				<p:rowEditor />
+			</p:column>
+
+
+		</p:dataTable>
+
+
+</h:form>
+	</ui:define>
+
+	<!--
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+-->
+</ui:composition>

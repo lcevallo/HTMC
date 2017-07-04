@@ -1,0 +1,157 @@
+<ui:composition template="/template.xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:define name="content">
+
+		<style>
+.ui-selectonemenu .ui-selectonemenu-label {
+	width: 248px !important;
+}
+
+.ui-selectonemenu {
+	width: 256px !important;
+}
+
+.ui-panel .ui-panel-content {
+	padding: 0em;
+}
+
+.rowContainer {
+	display: block;
+	width: 100%;
+	margin: 0px auto;
+	text-align: center;
+}
+
+.centerPanel {
+	margin: 0px auto;
+}
+
+.deleteUserButton {
+	width: auto !important;
+}
+
+table {
+	table-layout: fixed;
+}
+
+table td {
+	text-align: center;
+	word-wrap: break-word;
+}
+
+table input {
+	width: 90% !important;
+}
+
+.rowContainer input {
+	width: auto;
+}
+
+.labelForm {
+	text-align: right;
+	width: 150px;
+	display: inline-block;
+}
+
+.valueForm {
+	margin-left: 4px;
+	display: inline-block;
+}
+
+.buttonForm {
+	width: 204px;
+}
+</style>
+
+
+		<h:form id="form">
+
+			<p:growl id="growl" life="3000" showDetail="false" />
+
+			<div class="ui-grid ui-grid-responsive">
+				<div class="ui-grid-row">
+					<div class="ui-grid-col-6">
+						<p:panel id="panelUsuario" header="Usuarios">
+
+							<p:dataTable id="tablaUsuarios" var="record"
+								value="#{usuarioRolBean.usuarios}" paginator="true"
+								paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{currentPage} de {totalPages}"
+								rowsPerPageTemplate="5,10,15" widgetVar="tablaUsuarios"
+								filteredValue="#{usuarioRolBean.usuariosFiltered}" rows="10"
+								emptyMessage="No existen datos para presentar">
+
+								<p:column filterBy="#{record.codUsuario}"
+									sortBy="#{record.codUsuario}" filterMatchMode="contains"
+									headerText="Usuario">
+									#{record.codUsuario}
+								</p:column>
+
+								<p:column filterBy="#{record.rolActivo}"
+									sortBy="#{record.rolActivo}" filterMatchMode="contains"
+									headerText="Rol activo">
+									#{record.rolActivo}
+								</p:column>
+
+								<p:column>
+									<p:commandButton action="#{usuarioRolBean.buscarRoles(record)}"
+										update=":form:panelRol" icon="ui-icon-circle-arrow-e" />
+								</p:column>
+
+							</p:dataTable>
+
+
+
+						</p:panel>
+					</div>
+					<div class="ui-grid-col-6">
+						<p:panel id="panelRol" header="Roles">
+
+							<p:tree id="rolesTree" value="#{usuarioRolBean.root}" var="node"
+								styleClass="centerPanel" animate="true" selectionMode="checkbox"
+								selection="#{usuarioRolBean.selectedNodes}">
+
+
+								<p:ajax event="select" update=":form:rolActivo"
+									listener="#{usuarioRolBean.onNodeSelect}" />
+								<p:ajax event="unselect" update=":form:rolActivo"
+									listener="#{usuarioRolBean.onNodeUnselect}" />
+
+
+								<p:treeNode id="treeNode">
+									<h:outputText value="#{node}" />
+								</p:treeNode>
+							</p:tree>
+							<br />
+							<div class="center">
+								Rol activo<br />
+								<p:selectOneMenu value="#{usuarioRolBean.usuario.rolActivo}"
+									id="rolActivo">
+									<f:selectItems value="#{usuarioRolBean.parentRoles}" var="item"
+										itemLabel="#{item.tipoUsuario}"
+										itemValue="#{item.tipoUsuario}" />
+								</p:selectOneMenu>
+								<br /> <br />
+								<p:commandButton value="Guardar" id="guardarRolesButton"
+									update="form" action="#{usuarioRolBean.guardar}"
+									icon="ui-icon-disk" />
+							</div>
+						</p:panel>
+					</div>
+				</div>
+			</div>
+
+			<br />
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

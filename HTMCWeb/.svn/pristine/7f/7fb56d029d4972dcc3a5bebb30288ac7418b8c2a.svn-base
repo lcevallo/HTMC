@@ -1,0 +1,135 @@
+package ManagedBeans;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.event.RowEditEvent;
+
+import Entities.VistaIngresoMaximoMinimo;
+import SessionBeans.VistaItemMaxMinFacadeLocal;
+
+@ManagedBean
+@ViewScoped
+public class MaxMinBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7886567574044689211L;
+	private VistaIngresoMaximoMinimo vistaIngresoMaximoMinimo;
+	private List<VistaIngresoMaximoMinimo> listaMedicamento;
+	private List<VistaIngresoMaximoMinimo> filteredListaMedicamento;
+	private String fecha_actual;
+	
+	@EJB
+    private VistaItemMaxMinFacadeLocal facadeVistaItemMaxMin;
+	
+	
+	@PostConstruct
+	public void inicio() {
+		try {
+			this.listaMedicamento = this.facadeVistaItemMaxMin.findAll();
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+							e.getMessage()));
+		}
+		
+	}
+
+	public MaxMinBean()
+	{
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		this.fecha_actual=dateFormat.format(cal.getTime());
+		
+		
+	}
+	
+	
+	public String getFecha_actual() {
+		return fecha_actual;
+	}
+
+	public void setFecha_actual(String fecha_actual) {
+		this.fecha_actual = fecha_actual;
+	}
+
+
+
+
+	public List<VistaIngresoMaximoMinimo> getListaMedicamento() {
+		return listaMedicamento;
+	}
+
+	public void setListaMedicamento(List<VistaIngresoMaximoMinimo> listaMedicamento) {
+		this.listaMedicamento = listaMedicamento;
+	}
+
+	public List<VistaIngresoMaximoMinimo> getFilteredListaMedicamento() {
+		return filteredListaMedicamento;
+	}
+
+	public void setFilteredListaMedicamento(List<VistaIngresoMaximoMinimo> filteredListaMedicamento) {
+		this.filteredListaMedicamento = filteredListaMedicamento;
+	}
+	
+	
+	
+	public VistaIngresoMaximoMinimo getVistaIngresoMaximoMinimo() {
+		return vistaIngresoMaximoMinimo;
+	}
+
+	public void setVistaIngresoMaximoMinimo(VistaIngresoMaximoMinimo vistaIngresoMaximoMinimo) {
+		this.vistaIngresoMaximoMinimo = vistaIngresoMaximoMinimo;
+	}
+			
+	public VistaItemMaxMinFacadeLocal getFacadeVistaItemMaxMin() {
+		return facadeVistaItemMaxMin;
+	}
+
+
+	public void setFacadeVistaItemMaxMin(VistaItemMaxMinFacadeLocal facadeVistaItemMaxMin) {
+		this.facadeVistaItemMaxMin = facadeVistaItemMaxMin;
+	}
+
+
+	public void onEdit(RowEditEvent event) {
+
+		this.vistaIngresoMaximoMinimo=(VistaIngresoMaximoMinimo)event.getObject();
+		FacesMessage msg = new FacesMessage("Editado item : " + this.vistaIngresoMaximoMinimo.getCodigoItem());
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		
+		/*
+		User user = (User) event.getObject();
+		FacesMessage msg = new FacesMessage("Edited User Id : " + user.getId());
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		*/
+	}
+
+	public void onCancel(RowEditEvent event)
+	{
+			
+		/*
+		     User user = (User) event.getObject();
+			 FacesMessage msg = new FacesMessage("Editing Cancelled for User
+			Id: "+ user.getId());
+			 FacesContext.getCurrentInstance().addMessage(null, msg);
+			 */
+	}
+}// fin del Bean MaxMinBean

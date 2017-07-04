@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+
+	<style>
+.fechaTexto {
+	clear: both;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left;
+}
+</style>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dialog header="Informacion del Ítem" modal="true" showEffect="fade"
+			hideEffect="fade" widgetVar="itemStockDialogWidget" width="40%"
+			position="top" appendToBody="false" draggable="false"
+			resizable="true" id="itemDialogStockItem">
+			<h:form id="formRecordItemStock">
+
+				
+
+				<p:commandButton id="dynaButtonRecordItemStock" value="Imprimir"
+					type="button" icon="ui-icon-print" />
+				<p:menu overlay="true" trigger="dynaButtonRecordItemStock"
+					my="left top" at="left bottom">
+					<p:submenu label="Reporte en:">
+						<p:menuitem value="PDF" icon="ui-icon-image"
+					actionListener="#{itemDetalleBean.exportarPDF()}" ajax="false" />
+				<p:menuitem icon="ui-icon-image">
+					<h:commandLink id="openPopUpDialogItem" value="VISOR PDF" target="blankPopUpDialogStockItem"
+						onclick="window.open('','blankPopUpDialogStockItem','status=no,toolbar=no,location=no,menubar=no,resizable,width=1008,height=690,scrollbars,left=100,top=50');"
+						actionListener="#{itemDetalleBean.verPdf()}" ajax="false" />
+				</p:menuitem>
+						<p:menuitem value="EXCEL" icon="ui-icon-xls" />
+					</p:submenu>
+				</p:menu>
+
+
+			</h:form>
+			<h:form id="formVisorInformacionStock">
+				<p:panel>
+					
+				<p:fieldset legend="Movimiento en el Mes">
+					<p:dataTable  value="#{itemDetalleBean.listaStockItem}" var="stockItem">
+				  <f:facet name="header">
+							<h:outputLabel for="itemCode" value="Item:" />
+							<h:outputText id="itemCode"
+								value="#{itemDetalleBean.itemFk}" />
+								<br />
+							<h:outputLabel for="itemDescripcion" value="Descripcion:" />
+							<h:outputText id="itemDescripcion"
+								value="#{itemDetalleBean.descripcion}" />
+				  </f:facet>
+					<p:column headerText="Ingreso">
+						<h:outputText value="#{stockItem[2]}" >
+						<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="(+)Ajuste de Inventario">
+						<h:outputText value="#{stockItem[3]}" >
+						<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="(-)Egreso">
+						<h:outputText value="#{stockItem[4]}" >
+						<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="(-)Otro Egreso">
+						<h:outputText value="#{stockItem[5]}" >
+						<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="(-)Transf">
+						<h:outputText value="#{stockItem[6]}" >
+						<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="(-)Ajuste de Egreso">
+						<h:outputText value="#{stockItem[7]}" >
+						<f:convertNumber pattern="#,##0.00" />
+						</h:outputText>
+					</p:column>
+					
+					</p:dataTable>
+						
+					</p:fieldset>	
+				</p:panel>
+			</h:form>
+
+
+		</p:dialog>
+
+	</ui:composition>
+
+</h:body>
+</html>
+
